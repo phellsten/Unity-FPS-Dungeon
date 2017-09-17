@@ -73,27 +73,27 @@ Shader "Water/basic" {
                 if (dot(normDir, lightDir) < 0.0) {
                     spec = float3(0.0,0.0,0.0);
                 } else { // otherwise add specular
-                	// we say specular is intensity * reflectivity * cosa^n
-                	// here, we replace cos once again with the dot product
-                	// our n value is gloss (the specular reflection exponent)
+                    // we say specular is intensity * reflectivity * cosa^n
+                    // here, we replace cos once again with the dot product
+                    // our n value is gloss (the specular reflection exponent)
                     spec = _LightColor0.rgb *
                             _Specular.rgb * pow(max(0.0, dot(
                             reflect(-lightDir, normDir),
                             viewDir)), _Gloss);
                 }
 
-				// TRANSLUCENCY //
+                // TRANSLUCENCY //
 
-				// diffuse translucency defined as i*k*max(0,(L.-N))
-				// for i = light intensity
-				// k = diffuse colour
-				// L = light direction
-				// N = normal
-				float3 trlu = _LightColor0.rgb
-							* _Color.rgb
-							* max(0.0, dot(lightDir, -normDir));
+                // diffuse translucency defined as i*k*max(0,(L.-N))
+                // for i = light intensity
+                // k = diffuse colour
+                // L = light direction
+                // N = normal
+                float3 trlu = _LightColor0.rgb
+                            * _Color.rgb
+                            * max(0.0, dot(lightDir, -normDir));
 
-				// ...
+                // ...
 
                 // float3(ambient + diffuse + specular + trlu), alpha 
                 o.col = float4(amb + diff + spec + trlu, 1.0);
