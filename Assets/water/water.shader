@@ -4,7 +4,10 @@ Shader "Water/basic" {
     Properties {
         // basics
         _Color ("Colour", Color) = (1,1,1,1)
-        _Opacity ("Opacity", Float) = 1
+
+        // translucency
+        _TrluColor ("Colour", Color) = (1,1,1,1)
+        _Opacity ("Opacity", Float) = 0.5
 
         // specular props
         _Specular ("Specular Colour", Color) = (1,1,1,1) 
@@ -13,6 +16,8 @@ Shader "Water/basic" {
     SubShader {
         Pass {  
             Tags { "LightMode" = "ForwardBase" } 
+
+            Cull Off
 
             CGPROGRAM
 
@@ -26,7 +31,9 @@ Shader "Water/basic" {
             uniform float4 _LightColor0; 
 
             uniform float4 _Color;
+
             uniform float4 _Opacity;
+            uniform float4 _TrluColor;
 
             // specular values
             uniform float4 _Specular;
@@ -38,12 +45,24 @@ Shader "Water/basic" {
             };
             struct vOut {
                 float4 pos : SV_POSITION;
-                float4 col : COLOR;
+            	float4 worldPos : TEXCOORD0;
+            	float3 norm : TEXCOORD1;
             };
 
             vOut vert(vIn input) {
                 vOut o;
 
+                o.worldPos = mul(unity_ObjectToWorld, input.pos);
+            	o.norm = normalize( mul(float4(input.norm, 0.0), unity_WorldToObject).xyz);
+                // translate using the unity matrix constant
+                o.pos = UnityObjectToClipPos(input.pos);
+
+                // done here..
+                return o;
+            }
+
+            float4 frag(vOut input) : COLOR {
+                // just a vertex shader :)
                 // we need the normal from the vertex/surface, transformed from world coords
                 float3 normDir = normalize( mul(input.norm, unity_WorldToObject) );
                 // we also need the direction of our camera
@@ -93,20 +112,18 @@ Shader "Water/basic" {
                             * _Color.rgb
                             * max(0.0, dot(lightDir, -normDir));
 
-                // ...
+				float3 trluForw;
+                // check light source side (a la specular)
+                if( dot(normDir, lightDir) > 0.0) {
+                	trluForw = float3(0.0,0.0,0.0);
+                } else {
+                	trluForw = _LightColor0.rgb
+                            * _TrluColor.rgb
+                            * pow(max(0.0, dot(-lightDir, viewDir)), _Opacity);
+				}
 
-                // float3(ambient + diffuse + specular + trlu), alpha 
-                o.col = float4(amb + diff + spec + trlu, 1.0);
-                // translate using the unity matrix constant
-                o.pos = UnityObjectToClipPos(input.pos);
-
-                // done here..
-                return o;
-            }
-
-            float4 frag(vOut input) : COLOR {
-                // just a vertex shader :)
-                return input.col;
+                // float3(ambient + diffuse + specular + translucency + forward translucency), alpha 
+                return float4(amb + diff + spec + trlu + trluForw, 1.0);
             }
 
             ENDCG
