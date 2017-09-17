@@ -119,7 +119,7 @@ Shader "Water/basic" {
                 } else {
                 	trluForw = _LightColor0.rgb
                             * _TrluColor.rgb
-                            * pow(max(0.0, dot(-lightDir, viewDir)), _Opacity);
+                            * pow(dot(-lightDir, viewDir), _Opacity);
 				}
 
                 // float3(ambient + diffuse + specular + translucency + forward translucency), alpha 
