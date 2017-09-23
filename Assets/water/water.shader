@@ -8,6 +8,7 @@ Shader "Water/basic" {
         // translucency
         _TrluColor ("Colour", Color) = (1,1,1,1)
         _Opacity ("Opacity", Float) = 0.5
+        _Sharpness ("Sharpness", Float) = 10
 
         // specular props
         _Specular ("Specular Colour", Color) = (1,1,1,1) 
@@ -15,9 +16,10 @@ Shader "Water/basic" {
     }
     SubShader {
         Pass {  
-            Tags { "LightMode" = "ForwardBase" } 
+            Tags { "LightMode" = "ForwardBase" "RenderType" = "Transparent" "Queue" = "Transparent" } 
 
             Cull Off
+            Blend SrcAlpha OneMinusSrcAlpha
 
             CGPROGRAM
 
@@ -26,6 +28,8 @@ Shader "Water/basic" {
 
             #include "UnityCG.cginc"
 
+
+
             // global var for directional light colour
             // (Our sun)
             uniform float4 _LightColor0; 
@@ -33,6 +37,7 @@ Shader "Water/basic" {
             uniform float4 _Color;
 
             uniform float4 _Opacity;
+            uniform float4 _Sharpness;
             uniform float4 _TrluColor;
 
             // specular values
@@ -62,11 +67,11 @@ Shader "Water/basic" {
             }
 
             float4 frag(vOut input) : COLOR {
-                // just a vertex shader :)
-                // we need the normal from the vertex/surface, transformed from world coords
-                float3 normDir = normalize( mul(input.norm, unity_WorldToObject) );
                 // we also need the direction of our camera
                 float3 viewDir = normalize(_WorldSpaceCameraPos - mul(unity_ObjectToWorld, input.pos).xyz);
+                // we need the normal from the vertex/surface, transformed from world coords
+                float3 normDir = normalize( mul(input.norm, unity_WorldToObject) );
+                //normDir = faceforward(normDir, -viewDir, normDir);
 
                 // since we're only using a directional light, grab its direction straight from the constant
                 // (attenuation value of the directional light will be 1.0 so we can ignore it..)
@@ -101,29 +106,8 @@ Shader "Water/basic" {
                             viewDir)), _Gloss);
                 }
 
-                // TRANSLUCENCY //
-
-                // diffuse translucency defined as i*k*max(0,(L.-N))
-                // for i = light intensity
-                // k = diffuse colour
-                // L = light direction
-                // N = normal
-                float3 trlu = _LightColor0.rgb
-                            * _Color.rgb
-                            * max(0.0, dot(lightDir, -normDir));
-
-				float3 trluForw;
-                // check light source side (a la specular)
-                if( dot(normDir, lightDir) > 0.0) {
-                	trluForw = float3(0.0,0.0,0.0);
-                } else {
-                	trluForw = _LightColor0.rgb
-                            * _TrluColor.rgb
-                            * pow(dot(-lightDir, viewDir), _Opacity);
-				}
-
-                // float3(ambient + diffuse + specular + translucency + forward translucency), alpha 
-                return float4(amb + diff + spec + trlu + trluForw, 1.0);
+                // float3(ambient + diffuse + specular), alpha 
+                return float4(amb + diff + spec, 0.7);
             }
 
             ENDCG
