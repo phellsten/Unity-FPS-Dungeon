@@ -17,7 +17,6 @@ Shader "Water/basic" {
     SubShader {
         Pass {  
             Tags { "LightMode" = "ForwardBase" "RenderType" = "Transparent" "Queue" = "Transparent" } 
-
             Cull Off
             Blend SrcAlpha OneMinusSrcAlpha
 
