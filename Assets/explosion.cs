@@ -15,7 +15,7 @@ public class explosion : MonoBehaviour {
 	}
 
 	void Explode() {
-		ParticleSystem particle = GetComponent<ParticleSystem>;
+		ParticleSystem particle = GetComponent<ParticleSystem>();
 		particle.Play ();
 		Destroy(gameObject, particle.duration);
 	}
