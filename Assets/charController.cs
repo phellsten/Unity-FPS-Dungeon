@@ -8,6 +8,7 @@ public class charController : MonoBehaviour {
 	public float speed = 5.0f;
 	public float jumpSpeed = 5.0f;
 	public Rigidbody rb;
+    public bool grounded = false;
 
 	void Start () {
 		rb = GetComponent<Rigidbody> ();
@@ -27,25 +28,28 @@ public class charController : MonoBehaviour {
 		if(Input.GetKey(KeyCode.S)) {
 			transform.Translate(-Vector3.forward * speed * Time.deltaTime);
 		}
-	}
+
+        
+
+    }
 
 	void FixedUpdate() {
 		// Can jump if we're on the ground and press space.
-		if (Input.GetKey (KeyCode.Space) && isGrounded()) {
+		if (Input.GetKey (KeyCode.Space) && grounded) {
 			rb.velocity += new Vector3(0,jumpSpeed,0);
 		}
 	}
 
 	// Check if player is on the ground.
-	bool isGrounded() {
-		RaycastHit ray;
+	
 
-		// Use a ray cast from the player directly down at a distance of 1 to check if we're on the ground.
-		if (Physics.Raycast (transform.position, Vector3.down, out ray, 1f)) {
-			return true;
-		}
-		else {
-			return false;
-		}
-	}
+    void OnCollisionEnter(Collision collision)
+    {
+        grounded = true;
+    }
+
+    private void OnCollisionExit(Collision collision)
+    {
+        grounded = false;
+    }
 }
