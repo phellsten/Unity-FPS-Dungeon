@@ -8,15 +8,17 @@ public class explosion : MonoBehaviour {
 	void Start () {
 		
 	}
-	
+
 	// Update is called once per frame
 	void Update () {
-		
+		if(Input.GetKey(KeyCode.E)) {
+			Explode ();
+		}
 	}
 
 	void Explode() {
 		ParticleSystem particle = GetComponent<ParticleSystem>();
 		particle.Play ();
-		Destroy(gameObject, particle.duration);
+
 	}
 }
