@@ -9,6 +9,9 @@ public class shootingScript : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
+		if (Time.timeScale == 0.0f) {
+			return;
+		}
 		if (Input.GetMouseButtonDown(0)) {
 			// Create muzzle flash
 			Instantiate(muzzle, this.transform.position - 1.5f * this.transform.forward, new Quaternion());

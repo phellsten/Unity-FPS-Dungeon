@@ -17,6 +17,9 @@ public class cameraMovement : MonoBehaviour {
     }
 
     void Update () {
+		if (Time.timeScale == 0.0f) {
+			return;
+		}
 		// Change new direction based on mouse axis.
 		deltaMousePos.x = Mathf.Lerp(deltaMousePos.x, Input.GetAxisRaw("Mouse X") * sens, 1f);
 		deltaMousePos.y = Mathf.Lerp(deltaMousePos.y, Input.GetAxisRaw("Mouse Y") * sens, 1f);
