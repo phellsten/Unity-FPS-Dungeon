@@ -8,30 +8,28 @@ public class meta : MonoBehaviour {
 	public GameObject pauseMenu;
 	public Button resumeGame;
 	public Button returnMenu;
-	// Use this for initialization
+
 	void Start () {
-		Cursor.visible = false;
-		Cursor.lockState = CursorLockMode.Locked;
-		pauseMenu.GetComponentInChildren<Canvas> ().enabled = false;
+		ResumeGame ();
+
+		// Set up pause menu button methods
 		resumeGame.onClick.AddListener (ResumeGame);
 		returnMenu.onClick.AddListener (QuitGame);
-
-
 	}
 	
 	// Update is called once per frame
 	void Update () {
+		// Escape to open menu
 		if (Input.GetKeyDown ("escape")) {
-			// Resume Game
 			if (Time.timeScale == 0.0f) {
+				// Resume Game
 				ResumeGame ();
 
-			// Pause Game
 			} else {
+				// Pause Game
 				Cursor.visible = true;
 				Cursor.lockState = CursorLockMode.None;
 				Time.timeScale = 0.0f;
-
 				pauseMenu.GetComponentInChildren<Canvas> ().enabled = true;
 			}
 		}
@@ -41,7 +39,6 @@ public class meta : MonoBehaviour {
 		Cursor.visible = false;
 		Cursor.lockState = CursorLockMode.Locked;
 		Time.timeScale = 1.0f;
-
 		pauseMenu.GetComponentInChildren<Canvas> ().enabled = false;
 	}
 

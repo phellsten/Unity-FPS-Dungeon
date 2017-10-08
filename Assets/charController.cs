@@ -29,6 +29,7 @@ public class charController : MonoBehaviour {
 			transform.Translate(-Vector3.forward * speed * Time.deltaTime);
 		}
 
+		// Holding shift to run faster
 		if(Input.GetKey(KeyCode.LeftShift)) {
 			speed = 8.0f;
 		}
