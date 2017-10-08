@@ -41,8 +41,9 @@ public class charController : MonoBehaviour {
 	void FixedUpdate() {
 		// Can jump if we're on the ground and press space.
 		if (Input.GetKey (KeyCode.Space) && grounded) {
-			rb.velocity += new Vector3(0,jumpSpeed,0);
-		}
+			rb.velocity = new Vector3();
+			rb.AddForce(transform.up * jumpSpeed, ForceMode.Impulse);
+		}	
 	}
 
 	// Check if player is on the ground.
