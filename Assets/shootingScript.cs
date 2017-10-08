@@ -6,8 +6,9 @@ public class shootingScript : MonoBehaviour {
 	public GameObject blood;
 	public GameObject muzzle;
 	public GameObject source;
+	public GameObject cursor;
 
-	private Vector3 aimPos = new Vector3 (0f, -0.318f, 0.682f);
+	private Vector3 aimPos = new Vector3 (0f, -0.288f, 0.682f);
 	private Vector3 normalPos = new Vector3 (0.499f, -0.414f, 0.806f);
 
 	private float gunMoveSpeed = 5f;
@@ -50,11 +51,15 @@ public class shootingScript : MonoBehaviour {
 		// Holding right click, move gun to aim down sights.
 		if (Input.GetMouseButton (1)) {
 			this.transform.localPosition = Vector3.MoveTowards (this.transform.localPosition, aimPos, gunMoveSpeed * Time.deltaTime);
+			cursor.GetComponentInChildren<Canvas> ().enabled = false;
+
 		}
 
 		// Right click not pressed, keep gun in normal position.
 		if (!Input.GetMouseButton (1)) {
 			this.transform.localPosition = Vector3.MoveTowards (this.transform.localPosition, normalPos, gunMoveSpeed * Time.deltaTime);
+			cursor.GetComponentInChildren<Canvas> ().enabled = true;
+
 		}
 	}
 }
