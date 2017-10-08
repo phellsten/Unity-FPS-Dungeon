@@ -28,6 +28,13 @@ public class charController : MonoBehaviour {
 		if(Input.GetKey(KeyCode.S)) {
 			transform.Translate(-Vector3.forward * speed * Time.deltaTime);
 		}
+
+		if(Input.GetKey(KeyCode.LeftShift)) {
+			speed = 8.0f;
+		}
+		if(!Input.GetKey(KeyCode.LeftShift)) {
+			speed = 5.0f;
+		}
     }
 
 	void FixedUpdate() {

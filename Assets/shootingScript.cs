@@ -32,5 +32,16 @@ public class shootingScript : MonoBehaviour {
 
 			}
 		}
+
+		if (Input.GetMouseButton (1)) {
+			//this.transform.localPosition = new Vector3 (0f, -0.318f, 0.682f);
+			this.transform.localPosition = Vector3.MoveTowards (this.transform.localPosition, new Vector3 (0f, -0.318f, 0.682f), 5f * Time.deltaTime);
+		}
+		if (!Input.GetMouseButton (1)) {
+			//this.transform.localPosition = new Vector3 (0.499f, -0.414f, 0.806f);
+			this.transform.localPosition = Vector3.MoveTowards (this.transform.localPosition, new Vector3 (0.499f, -0.414f, 0.806f), 5f * Time.deltaTime);
+
+
+		}
 	}
 }
