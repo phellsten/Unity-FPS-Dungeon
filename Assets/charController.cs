@@ -28,9 +28,6 @@ public class charController : MonoBehaviour {
 		if(Input.GetKey(KeyCode.S)) {
 			transform.Translate(-Vector3.forward * speed * Time.deltaTime);
 		}
-
-        
-
     }
 
 	void FixedUpdate() {
@@ -41,8 +38,6 @@ public class charController : MonoBehaviour {
 	}
 
 	// Check if player is on the ground.
-	
-
     void OnCollisionEnter(Collision collision)
     {
         grounded = true;
