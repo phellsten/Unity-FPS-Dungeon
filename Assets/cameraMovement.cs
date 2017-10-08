@@ -5,9 +5,9 @@ using UnityEngine;
 
 public class cameraMovement : MonoBehaviour {
 	public GameObject player;
-    public GameObject bullet;
+    public GameObject explosion;
     public float bulletSpeed = 100f;
-    RaycastHit hit;
+    
     Camera cam;
     private Vector2 mouseLook;
 	private Vector2 deltaMousePos;
@@ -15,7 +15,6 @@ public class cameraMovement : MonoBehaviour {
 
     private void Start()
     {
-        hit = new RaycastHit();
         cam = GetComponent<Camera>();
     }
 
@@ -36,15 +35,51 @@ public class cameraMovement : MonoBehaviour {
         Vector3 forward = transform.TransformDirection(Vector3.forward) * 10;
         Vector3 gunPos = new Vector3(transform.position.x + 0.886f, transform.position.y - 0.281f, transform.position.z + 0.925f);
         
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButton(0))
         {
-            Ray ray = cam.ScreenPointToRay(Input.mousePosition);
+            
+            Ray ray = cam.ScreenPointToRay(cam.transform.forward);
             Debug.DrawRay(ray.origin, ray.direction, new Color(1.0f,0,0),5 );
+            RaycastHit hit;
+            bool raycasthit = Physics.Raycast(ray, out hit, 200);
+            GameObject myLine = new GameObject();
+            myLine.transform.position = ray.origin;
+            myLine.AddComponent<LineRenderer>();
+            LineRenderer lr = myLine.GetComponent<LineRenderer>();
+            lr.material = new Material(Shader.Find("Particles/Alpha Blended Premultiply"));
+            lr.SetColors(Color.red, Color.red);
+            lr.SetWidth(0.1f, 0.1f);
+            lr.SetPosition(0, ray.origin);
+            lr.SetPosition(1, hit.point);
+            if (raycasthit) {
 
-            
-            GameObject bulletObj = Instantiate(bullet, transform.position, transform.rotation) as GameObject;
-            bulletObj.GetComponent<Rigidbody>().velocity = 1.0f * (hit.point - transform.position + new Vector3(0f, 0f, -5f)).normalized * bulletSpeed;
-            
+                
+
+
+
+                if (hit.collider.tag == "Enemy")
+                {
+                    Debug.Log("Hit!");
+                    Debug.DrawLine(ray.origin, hit.point, Color.yellow);
+                    Instantiate(explosion, hit.point, new Quaternion());
+
+                    
+
+                }
+                
+
+            }
+            else
+            {
+                Debug.Log("NO HIT");
+            }
+
+
+            //GameObject bulletObj = Instantiate(bullet, ray.origin, transform.rotation) as GameObject;
+            //bulletObj.transform.position = new Vector3(bulletObj.transform.position.x, bulletObj.transform.position.y, bulletObj.transform.position.z + 2);
+
+            //bulletObj.GetComponent<Rigidbody>().velocity = -1.0f * (hit.point - transform.position).normalized * bulletSpeed;
+
         }
     }
 
