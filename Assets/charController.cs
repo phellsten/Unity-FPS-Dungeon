@@ -15,6 +15,7 @@ public class charController : MonoBehaviour {
 	}
 
 	void FixedUpdate() {
+		groundedCheck ();
 		// Can jump if we're on the ground and press space.
 		if (Input.GetKey (KeyCode.Space) && grounded) {
 			rb.velocity = new Vector3();
@@ -37,26 +38,38 @@ public class charController : MonoBehaviour {
 		}
 
 		// Holding shift to run faster
-		if(Input.GetKey(KeyCode.LeftShift)) {
+		if(Input.GetKey(KeyCode.LeftShift) && grounded) {
 			speed = 2 * baseSpeed;
 		}
-		if(!Input.GetKey(KeyCode.LeftShift)) {
+		if(!Input.GetKey(KeyCode.LeftShift) && grounded) {
 			speed = baseSpeed;
 		}
 	}
 
-	// Check if player is on the ground.
+	// Upon player colliding with an object, update grounded status.
     void OnCollisionEnter(Collision collision)
     {
         grounded = true;
     }
-
     private void OnCollisionExit(Collision collision)
     {
         grounded = false;
+
+		// Player sometimes not colliding with ground eg on a slope,
+		// Do a ray trace to double check.
 		RaycastHit ray;
 		if (Physics.Raycast (transform.position, Vector3.down, out ray, 1.2f)) {
 			grounded = true;
 		}
     }
+
+	// Check if player is on the ground.
+	private void groundedCheck() {
+		RaycastHit ray;
+		if (Physics.Raycast (transform.position, Vector3.down, out ray, 1.2f)) {
+			grounded = true;
+		} else {
+			grounded = false;
+		}
+	}
 }
