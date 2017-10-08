@@ -11,7 +11,7 @@ public class shootingScript : MonoBehaviour {
 	private Vector3 normalPos = new Vector3 (0.499f, -0.414f, 0.806f);
 
 	private float gunMoveSpeed = 5f;
-	private float muzzleOffset = 1.5f;
+	private float muzzleOffset = 1f;
 	private float rayDistance = 200;
 
 	// Update is called once per frame
@@ -31,11 +31,18 @@ public class shootingScript : MonoBehaviour {
 
 			if (raycasthit) {
 				// Ray hit enemy
-				if (hit.collider.tag == "Enemy") {
+				if (hit.collider.tag == "EnemyMonster" || hit.collider.tag == "EnemySkeleton") {
 					// Create blood effect, 
 					// ToDo : Subtract HP from enemy
 					Debug.DrawLine(ray.origin, hit.point, Color.yellow);
 					Instantiate (blood, hit.point, new Quaternion ());
+					if (hit.collider.tag == "EnemyMonster") {
+						hit.collider.gameObject.GetComponent<MonsterController> ().health -= 1;
+					} else if (hit.collider.tag == "EnemySkeleton") {
+						hit.collider.gameObject.GetComponent<SkeletonController> ().health -= 1;
+
+					}
+
 				}
 			}
 		}

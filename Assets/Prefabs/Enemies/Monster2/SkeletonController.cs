@@ -11,9 +11,14 @@ public class SkeletonController : MonoBehaviour {
     private IEnumerator moveChecker;
     //private bool moving = false;
     //private bool running = false;
-
+	public float health = 5;
     public float moveCheckDelay = 0.1f;
 
+	public GameObject explosion;
+
+	void Start() {
+		explosion = (GameObject)(Resources.Load ("explosion"));
+	}
 
     void Awake () {
         nav = GetComponent<NavMeshAgent>();
@@ -22,6 +27,13 @@ public class SkeletonController : MonoBehaviour {
         moveChecker = CheckPlayerPosition();
         StartCoroutine(moveChecker);
         anim.SetBool("Walking", true);
+	}
+
+	void Update () {
+		if (health <= 0) {
+			Instantiate (explosion, this.transform.position, new Quaternion ());
+			Destroy (this.gameObject);
+		}
 	}
 	
 	//void Update () {
