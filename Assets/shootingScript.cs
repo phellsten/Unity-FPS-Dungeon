@@ -16,7 +16,7 @@ public class shootingScript : MonoBehaviour {
 	private float muzzleOffset = 1f;
 	private float rayDistance = 200;
 
-    private float zoomFov = 70f;
+    private float zoomFov = 60f;
     private float normFov = 90f;
 
 	// Update is called once per frame
