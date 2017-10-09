@@ -9,15 +9,18 @@ public class MonsterController : MonoBehaviour {
     private NavMeshAgent nav;
     private Animator anim;
     private AnimationClip clip;
+    private GameObject player;
     private Transform playerTransform;
     private IEnumerator moveChecker;
+    private bool inRange = false;
     //private bool moving = false;
     //private bool running = false;
-	public float health = 5;
+    public float health = 5;
 
     public static float moveCheckDelay = 0.1f;
+    public static int attackDamage = 10;
 
-	public GameObject explosion;
+    public GameObject explosion;
 
 	void Start() {
 		explosion = (GameObject)(Resources.Load ("explosion"));
@@ -27,7 +30,8 @@ public class MonsterController : MonoBehaviour {
         nav = GetComponent<NavMeshAgent>();
         anim = GetComponentInChildren<Animator>();
         AddAttackAnimEvent();
-        playerTransform = GameObject.FindGameObjectWithTag("Player").transform;
+        player = GameObject.FindGameObjectWithTag("Player");
+        playerTransform = player.transform;
         moveChecker = CheckPlayerPosition();
         StartCoroutine(moveChecker);
         anim.SetBool("Walking", true);
@@ -36,13 +40,21 @@ public class MonsterController : MonoBehaviour {
     private void AddAttackAnimEvent()
     {
         //Debug.Log("Create animEvent");
-        AnimationEvent animEvent = new AnimationEvent();
-        animEvent.functionName = "Attack";
-        animEvent.stringParameter = "Attacking";
-        animEvent.time = 0.12f;
-        animEvent.messageOptions = SendMessageOptions.DontRequireReceiver;
-        clip = anim.runtimeAnimatorController.animationClips[0];
-        clip.AddEvent(animEvent);
+        // Attack 1
+        AnimationEvent animEvent1 = new AnimationEvent();
+        animEvent1.functionName = "Attack";
+        animEvent1.stringParameter = "Attacking";
+        animEvent1.time = 0.09f;
+        animEvent1.messageOptions = SendMessageOptions.DontRequireReceiver;
+        // Attack 2
+        AnimationEvent animEvent2 = new AnimationEvent();
+        animEvent2.functionName = "Attack";
+        animEvent2.stringParameter = "Attacking";
+        animEvent2.time = 0.23f;
+        animEvent2.messageOptions = SendMessageOptions.DontRequireReceiver;
+        clip = anim.runtimeAnimatorController.animationClips[2];
+        clip.AddEvent(animEvent1);
+        clip.AddEvent(animEvent2);
     }
 
     void Update () {
@@ -82,6 +94,10 @@ public class MonsterController : MonoBehaviour {
 
     public void Attack(String message)
     {
+        if (inRange)
+        {
+            player.GetComponent<HealthManager>().ApplyDamage(attackDamage);
+        }
         Debug.Log("Monster AnimEvent: " + message);
     }
 
@@ -91,6 +107,7 @@ public class MonsterController : MonoBehaviour {
         if (collision.gameObject.tag == "Player")
         {
             StopCoroutine(moveChecker);
+            inRange = true;
             anim.SetBool("Walking", false);
         }
     }
@@ -101,6 +118,7 @@ public class MonsterController : MonoBehaviour {
         if (collision.gameObject.tag == "Player")
         {
             StartCoroutine(moveChecker);
+            inRange = false;
             anim.SetBool("Walking", true);
         }
     }

@@ -15,7 +15,7 @@ public class SkeletonController : MonoBehaviour {
     private bool inRange = false;
     //private bool moving = false;
     //private bool running = false;
-	  public float health = 5;
+	public float health = 5;
 
     public static float moveCheckDelay = 0.1f;
     public static int attackDamage = 10;
