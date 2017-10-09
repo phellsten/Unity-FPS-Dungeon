@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
@@ -7,24 +8,38 @@ public class MonsterController : MonoBehaviour {
 
     private NavMeshAgent nav;
     private Animator anim;
+    private AnimationClip clip;
     private Transform playerTransform;
     private IEnumerator moveChecker;
     //private bool moving = false;
     //private bool running = false;
 
-    public float moveCheckDelay = 0.1f;
+    public static float moveCheckDelay = 0.1f;
 
 
     void Awake () {
         nav = GetComponent<NavMeshAgent>();
         anim = GetComponentInChildren<Animator>();
+        AddAttackAnimEvent();
         playerTransform = GameObject.FindGameObjectWithTag("Player").transform;
         moveChecker = CheckPlayerPosition();
         StartCoroutine(moveChecker);
         anim.SetBool("Walking", true);
 	}
-	
-	//void Update () {
+
+    private void AddAttackAnimEvent()
+    {
+        //Debug.Log("Create animEvent");
+        AnimationEvent animEvent = new AnimationEvent();
+        animEvent.functionName = "Attack";
+        animEvent.stringParameter = "Attacking";
+        animEvent.time = 0.12f;
+        animEvent.messageOptions = SendMessageOptions.DontRequireReceiver;
+        clip = anim.runtimeAnimatorController.animationClips[0];
+        clip.AddEvent(animEvent);
+    }
+
+    void Update () {
         //if (!moving && running)
         //{
         //    Debug.Log("Stop coroutine");
@@ -48,8 +63,17 @@ public class MonsterController : MonoBehaviour {
         //    StartCoroutine(arriveChecker);
         //    running = true;
         //}
-        
-    //}
+        if (Input.GetKeyDown(KeyCode.Keypad1))
+        {
+            anim.SetTrigger("Attack");
+        }
+
+    }
+
+    public void Attack(String message)
+    {
+        Debug.Log("Monster AnimEvent: " + message);
+    }
 
     // Stop when encountered the player
     private void OnCollisionEnter(Collision collision)
@@ -76,7 +100,7 @@ public class MonsterController : MonoBehaviour {
     {     
         while (true)
         {
-            Debug.Log("Run coroutine");
+            //Debug.Log("Run coroutine");
             nav.SetDestination(playerTransform.position);
             yield return new WaitForSeconds(moveCheckDelay);
         }
