@@ -81,6 +81,11 @@ public class MonsterController : MonoBehaviour {
 
     }
 
+    private void OnDestroy()
+    {
+        StopCoroutine(moveChecker);
+    }
+
     public void Attack(String message)
     {
         Debug.Log("Monster AnimEvent: " + message);
