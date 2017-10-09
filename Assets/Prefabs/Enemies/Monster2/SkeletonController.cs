@@ -15,10 +15,16 @@ public class SkeletonController : MonoBehaviour {
     private bool inRange = false;
     //private bool moving = false;
     //private bool running = false;
+	  public float health = 5;
 
     public static float moveCheckDelay = 0.1f;
     public static int attackDamage = 10;
 
+	public GameObject explosion;
+
+	void Start() {
+		explosion = (GameObject)(Resources.Load ("explosion"));
+	}
 
     void Awake () {
         nav = GetComponent<NavMeshAgent>();
@@ -30,7 +36,6 @@ public class SkeletonController : MonoBehaviour {
         StartCoroutine(moveChecker);
         anim.SetBool("Walking", true);
 	}
-
     private void AddAttackAnimEvent()
     {
         //Debug.Log("Create animEvent");
@@ -67,6 +72,10 @@ public class SkeletonController : MonoBehaviour {
     //    StartCoroutine(arriveChecker);
     //    running = true;
     //}
+        if (health <= 0) {
+			      Instantiate (explosion, this.transform.position, new Quaternion ());
+			      Destroy (this.gameObject);
+		    }
         if (Input.GetKeyDown(KeyCode.Keypad2))
         {
             anim.SetTrigger("Attack");

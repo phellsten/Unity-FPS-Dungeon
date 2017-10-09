@@ -13,9 +13,15 @@ public class MonsterController : MonoBehaviour {
     private IEnumerator moveChecker;
     //private bool moving = false;
     //private bool running = false;
+	public float health = 5;
 
     public static float moveCheckDelay = 0.1f;
 
+	public GameObject explosion;
+
+	void Start() {
+		explosion = (GameObject)(Resources.Load ("explosion"));
+	}
 
     void Awake () {
         nav = GetComponent<NavMeshAgent>();
@@ -40,6 +46,10 @@ public class MonsterController : MonoBehaviour {
     }
 
     void Update () {
+        if (health <= 0) {
+			    Instantiate (explosion, this.transform.position, new Quaternion ());
+			    Destroy (this.gameObject);
+		    }
         //if (!moving && running)
         //{
         //    Debug.Log("Stop coroutine");
