@@ -48,7 +48,8 @@ public class MonsterController : MonoBehaviour {
     void Update () {
         if (health <= 0) {
 			    Instantiate (explosion, this.transform.position, new Quaternion ());
-			    Destroy (this.gameObject);
+                this.GetComponent<scoreManager>().incrementScore();
+                Destroy (this.gameObject);
 		    }
         //if (!moving && running)
         //{

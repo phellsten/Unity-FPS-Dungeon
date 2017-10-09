@@ -15,7 +15,10 @@ public class meta : MonoBehaviour {
 		// Set up pause menu button methods
 		resumeGame.onClick.AddListener (ResumeGame);
 		returnMenu.onClick.AddListener (QuitGame);
-	}
+
+        GameObject.FindGameObjectWithTag("score").GetComponent<Text>().text = "0";
+
+    }
 	
 	// Update is called once per frame
 	void Update () {

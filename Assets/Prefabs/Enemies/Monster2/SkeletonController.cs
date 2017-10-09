@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.UI;
 
 public class SkeletonController : MonoBehaviour {
 
@@ -74,6 +75,7 @@ public class SkeletonController : MonoBehaviour {
     //}
         if (health <= 0) {
 			      Instantiate (explosion, this.transform.position, new Quaternion ());
+                  this.GetComponent<scoreManager>().incrementScore();
 			      Destroy (this.gameObject);
 		    }
         if (Input.GetKeyDown(KeyCode.Keypad2))
