@@ -5,7 +5,14 @@ using UnityEngine.UI;
 
 public class scoreManager : MonoBehaviour {
 
+    private Text scoreText;
+
+    void Awake()
+    {
+        scoreText = GameObject.FindGameObjectWithTag("Score").GetComponent<Text>();
+    }
+
     public void incrementScore() {
-        GameObject.FindGameObjectWithTag("score").GetComponent<Text>().text = (int.Parse(GameObject.FindGameObjectWithTag("score").GetComponent<Text>().text) + 1).ToString();
+        scoreText.text = (int.Parse(scoreText.text) + 1).ToString();
     }
 }
