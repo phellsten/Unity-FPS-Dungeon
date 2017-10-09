@@ -53,6 +53,7 @@ public class MonsterController : MonoBehaviour {
         animEvent2.time = 0.23f;
         animEvent2.messageOptions = SendMessageOptions.DontRequireReceiver;
         clip = anim.runtimeAnimatorController.animationClips[2];
+        // Debug.Log("Clip: " + clip.name);
         clip.AddEvent(animEvent1);
         clip.AddEvent(animEvent2);
     }
