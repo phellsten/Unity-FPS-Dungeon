@@ -16,6 +16,9 @@ public class shootingScript : MonoBehaviour {
 	private float muzzleOffset = 1f;
 	private float rayDistance = 200;
 
+    private float zoomFov = 70f;
+    private float normFov = 90f;
+
 	// Update is called once per frame
 	void Update () {
 		// Game is paused, don't shoot.
@@ -53,14 +56,24 @@ public class shootingScript : MonoBehaviour {
 		if (Input.GetMouseButton (1)) {
 			this.transform.localPosition = Vector3.MoveTowards (this.transform.localPosition, aimPos, gunMoveSpeed * Time.deltaTime);
 			cursor.GetComponentInChildren<Canvas> ().enabled = false;
+            Camera mainCam = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
+            if (mainCam.fieldOfView >= zoomFov) { 
+                mainCam.fieldOfView -= 150f * Time.deltaTime;
+            }
+            
 
-		}
+
+        }
 
 		// Right click not pressed, keep gun in normal position.
 		if (!Input.GetMouseButton (1)) {
 			this.transform.localPosition = Vector3.MoveTowards (this.transform.localPosition, normalPos, gunMoveSpeed * Time.deltaTime);
 			cursor.GetComponentInChildren<Canvas> ().enabled = true;
-
-		}
+            Camera mainCam = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
+            if (mainCam.fieldOfView <= normFov)
+            {
+                mainCam.fieldOfView += 150f * Time.deltaTime;
+            }
+        }
 	}
 }
