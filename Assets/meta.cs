@@ -16,7 +16,7 @@ public class meta : MonoBehaviour {
 		resumeGame.onClick.AddListener (ResumeGame);
 		returnMenu.onClick.AddListener (QuitGame);
 
-        GameObject.FindGameObjectWithTag("score").GetComponent<Text>().text = "0";
+        GameObject.FindGameObjectWithTag("Score").GetComponent<Text>().text = "0";
 
     }
 	
