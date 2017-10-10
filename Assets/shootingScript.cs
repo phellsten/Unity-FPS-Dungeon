@@ -30,6 +30,8 @@ public class shootingScript : MonoBehaviour {
 
     private Text ammoDisplay;
     private int ammoCount;
+    private int ammoCap;
+    private int magCount;
 
     private bool reloading = false;
     private float reloadTimer = 0.8f;
@@ -39,6 +41,9 @@ public class shootingScript : MonoBehaviour {
         this.mainCam = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
         this.ammoDisplay = GameObject.FindGameObjectWithTag("Ammo").GetComponent<Text>();
         this.ammoCount = 8;
+        this.magCount = 8;
+        this.ammoCap = 56;
+        ammoDisplay.text = "Ammo: " + ammoCount + " / " + ammoCap;
     }
 
     // Update is called once per frame
@@ -66,14 +71,16 @@ public class shootingScript : MonoBehaviour {
             {
                 reloading = false;
                 reloadTimer = 0.8f;
-                ammoCount = 8;
-                this.ammoDisplay.text = "Ammo: " + ammoCount;
+                ammoCap -= magCount - ammoCount;
+                ammoCount = magCount;
+
+                this.ammoDisplay.text = "Ammo: " + ammoCount + " / " + ammoCap;
             }
         }
 
 
         // Reloading
-        if(Input.GetKeyDown(KeyCode.R) && !reloading && ammoCount < 8)
+        if (Input.GetKeyDown(KeyCode.R) && !reloading && ammoCount < magCount && ammoCap >= magCount - ammoCount)
         {
             reloading = true;
             GetComponents<AudioSource>()[2].Play();
@@ -95,7 +102,7 @@ public class shootingScript : MonoBehaviour {
         if (Input.GetMouseButtonDown(0) && ammoCount > 0 && !reloading)
         {
             ammoCount -= 1;
-            this.ammoDisplay.text = "Ammo: " + ammoCount;
+            this.ammoDisplay.text = "Ammo: " + ammoCount + " / " + ammoCap;
 
             // Create muzzle flash
             Instantiate(muzzle, this.transform.position - muzzleOffset * this.transform.forward, new Quaternion());
