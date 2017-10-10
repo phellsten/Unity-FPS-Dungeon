@@ -9,17 +9,26 @@ public class charController : MonoBehaviour {
 	public float jumpSpeed = 7.0f;
 	public Rigidbody rb;
     public bool grounded = false;
+    private bool moving = false;
 
 	void Start () {
 		rb = GetComponent<Rigidbody> ();
 	}
 
 	void FixedUpdate() {
-		groundedCheck ();
+        if (Time.timeScale == 0.0f)
+        {
+            GetComponents<AudioSource>()[0].Stop();
+            GetComponents<AudioSource>()[1].Stop();
+        }
+
+        groundedCheck ();
+
 		// Can jump if we're on the ground and press space.
 		if (Input.GetKey (KeyCode.Space) && grounded) {
 			rb.velocity = new Vector3();
-			if (Input.GetKey (KeyCode.LeftControl)) {
+            GetComponents<AudioSource>()[0].Stop();
+            if (Input.GetKey (KeyCode.LeftControl)) {
 				// Crouch jumping
 				speed = baseSpeed;
 				rb.AddForce (transform.up * jumpSpeed * 1.15f, ForceMode.Impulse);
@@ -30,17 +39,27 @@ public class charController : MonoBehaviour {
 		// Movement keys with WASD
 		if(Input.GetKey(KeyCode.D)) {
 			transform.Translate(Vector3.Normalize(Vector3.right * Time.deltaTime) * speed);
-		}
+            moving = true;
+        }
 		if(Input.GetKey(KeyCode.A)) {
 			
 			transform.Translate(Vector3.Normalize(-1.0f * Vector3.right * Time.deltaTime) * speed);
-		}
+            moving = true;
+        }
 		if(Input.GetKey(KeyCode.W)) {
 			transform.Translate(Vector3.Normalize(Vector3.forward * Time.deltaTime) * speed);
-		}
+            moving = true;
+        }
 		if(Input.GetKey(KeyCode.S)) {
 			transform.Translate(Vector3.Normalize(-1.0f * Vector3.forward * Time.deltaTime) * speed);
-		}
+            moving = true;
+        }
+
+        if(!Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.W) && !Input.GetKey(KeyCode.S) && !Input.GetKey(KeyCode.D))
+        {
+            moving = false;
+        }
+
 		if(!Input.GetKey(KeyCode.LeftControl) && grounded) {
 			speed = baseSpeed;
 		}
@@ -54,6 +73,47 @@ public class charController : MonoBehaviour {
 		if(Input.GetKey(KeyCode.LeftControl) && grounded) {
 			speed = baseSpeed / 2;
 		}
+
+        groundedCheck();
+
+        if(moving)
+        {
+            if (!Input.GetKey(KeyCode.LeftShift))
+            {
+                // If not sprinting, stop playing sprinting sound.
+                GetComponents<AudioSource>()[1].Stop();
+
+                // If walking sound isn't playing, play it.
+                if (!GetComponents<AudioSource>()[0].isPlaying)
+                {
+                    GetComponents<AudioSource>()[0].Play();
+                }
+            }
+
+            if (Input.GetKey(KeyCode.LeftShift))
+            {
+                // If we are sprinting, stop the walking sound.
+                GetComponents<AudioSource>()[0].Stop();
+
+                // If the sprinting sound isn't playing, play it.
+                if (!GetComponents<AudioSource>()[1].isPlaying)
+                {
+                    GetComponents<AudioSource>()[1].Play();
+                }
+            }
+
+        }
+        else
+        {
+            GetComponents<AudioSource>()[0].Stop();
+            GetComponents<AudioSource>()[1].Stop();
+        }
+
+        if(!grounded)
+        {
+            GetComponents<AudioSource>()[0].Stop();
+            GetComponents<AudioSource>()[1].Stop();
+        }
 
 	}
 

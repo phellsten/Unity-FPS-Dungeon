@@ -32,14 +32,13 @@ public class shootingScript : MonoBehaviour {
     private int ammoCount;
 
     private bool reloading = false;
-    private float reloadTimer = 2f;
+    private float reloadTimer = 0.8f;
 
     private void Start()
     {
         this.mainCam = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
         this.ammoDisplay = GameObject.FindGameObjectWithTag("Ammo").GetComponent<Text>();
         this.ammoCount = 8;
-        
     }
 
     // Update is called once per frame
@@ -66,7 +65,7 @@ public class shootingScript : MonoBehaviour {
             if (reloadTimer <= 0f)
             {
                 reloading = false;
-                reloadTimer = 2f;
+                reloadTimer = 0.8f;
                 ammoCount = 8;
                 this.ammoDisplay.text = "Ammo: " + ammoCount;
             }
@@ -74,9 +73,10 @@ public class shootingScript : MonoBehaviour {
 
 
         // Reloading
-        if(Input.GetKeyDown(KeyCode.R) && !reloading)
+        if(Input.GetKeyDown(KeyCode.R) && !reloading && ammoCount < 8)
         {
             reloading = true;
+            GetComponents<AudioSource>()[2].Play();
         }
         
         if(this.transform.localPosition.y > yNormalHeight && !reloading)
@@ -92,28 +92,33 @@ public class shootingScript : MonoBehaviour {
         }
 
         // Shooting
-        if (Input.GetMouseButtonDown(0) && ammoCount > 0 && !reloading) {
+        if (Input.GetMouseButtonDown(0) && ammoCount > 0 && !reloading)
+        {
             ammoCount -= 1;
             this.ammoDisplay.text = "Ammo: " + ammoCount;
 
             // Create muzzle flash
             Instantiate(muzzle, this.transform.position - muzzleOffset * this.transform.forward, new Quaternion());
 
-			// Create raycast forwards from player
-			Ray ray = new Ray(source.transform.position, source.transform.forward);
-			RaycastHit hit;
-			bool raycasthit = Physics.Raycast(ray, out hit, rayDistance);
-            
+            // Create raycast forwards from player
+            Ray ray = new Ray(source.transform.position, source.transform.forward);
+            RaycastHit hit;
+            bool raycasthit = Physics.Raycast(ray, out hit, rayDistance);
+
             // Recoil animation
             //this.transform.localPosition = Vector3.MoveTowards(this.transform.localPosition, new Vector3(this.transform.localPosition.x, 0f, this.transform.localPosition.z), 25f * Time.deltaTime);
             this.transform.localRotation = Quaternion.Lerp(this.transform.localRotation, recoilRot, 10f * Time.deltaTime);
 
-			if (raycasthit) {
-				// Ray hit enemy
-				if (hit.collider.tag == "EnemyMonster" || hit.collider.tag == "EnemySkeleton") {
-					// Create blood effect, 
-					Debug.DrawLine(ray.origin, hit.point, Color.yellow);
-					Instantiate (blood, hit.point, new Quaternion ());
+            GetComponents<AudioSource>()[0].Play();
+
+            if (raycasthit)
+            {
+                // Ray hit enemy
+                if (hit.collider.tag == "EnemyMonster" || hit.collider.tag == "EnemySkeleton")
+                {
+                    // Create blood effect, 
+                    Debug.DrawLine(ray.origin, hit.point, Color.yellow);
+                    Instantiate(blood, hit.point, new Quaternion());
                     if (hit.collider.tag == "EnemyMonster")
                     {
                         hit.collider.gameObject.GetComponent<MonsterController>().health -= 1;
@@ -122,9 +127,13 @@ public class shootingScript : MonoBehaviour {
                     {
                         hit.collider.gameObject.GetComponent<SkeletonController>().health -= 1;
                     }
-				}
-			}
-		}
+                }
+            }
+        }
+        else if (Input.GetMouseButtonDown(0) && ammoCount == 0 && !reloading)
+        {
+            GetComponents<AudioSource>()[1].Play();
+        }
 
 		// Holding right click, move gun to aim down sights.
 		if (Input.GetMouseButton (1) && !reloading) {
