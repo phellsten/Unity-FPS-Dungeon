@@ -16,7 +16,7 @@ public class shootingScript : MonoBehaviour {
 	private float muzzleOffset = 1f;
 	private float rayDistance = 200;
 
-    private float zoomFov = 60f;
+    private float zoomFov = 70f;
     private float normFov = 90f;
 
 	// Update is called once per frame
@@ -58,7 +58,7 @@ public class shootingScript : MonoBehaviour {
 			cursor.GetComponentInChildren<Canvas> ().enabled = false;
             Camera mainCam = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
             if (mainCam.fieldOfView >= zoomFov) { 
-                mainCam.fieldOfView -= 150f * Time.deltaTime;
+                mainCam.fieldOfView -= 500f * Time.deltaTime;
             }
             
 
@@ -72,7 +72,7 @@ public class shootingScript : MonoBehaviour {
             Camera mainCam = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
             if (mainCam.fieldOfView <= normFov)
             {
-                mainCam.fieldOfView += 150f * Time.deltaTime;
+                mainCam.fieldOfView += 500f * Time.deltaTime;
             }
         }
 	}
