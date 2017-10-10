@@ -18,6 +18,8 @@ public class shootingScript : MonoBehaviour {
 	private float muzzleOffset = 1f;
 	private float rayDistance = 200f;
 
+    private bool aiming = false;
+
     private float zoomFov = 70f;
     private float normFov = 90f;
     private float fovMoveSpeed = 500f;
@@ -42,7 +44,7 @@ public class shootingScript : MonoBehaviour {
         this.ammoDisplay = GameObject.FindGameObjectWithTag("Ammo").GetComponent<Text>();
         this.ammoCount = 8;
         this.magCount = 8;
-        this.ammoCap = 56;
+        this.ammoCap = 24;
         ammoDisplay.text = "Ammo: " + ammoCount + " / " + ammoCap;
     }
 
@@ -71,16 +73,24 @@ public class shootingScript : MonoBehaviour {
             {
                 reloading = false;
                 reloadTimer = 0.8f;
-                ammoCap -= magCount - ammoCount;
-                ammoCount = magCount;
+                if (ammoCap + ammoCount < magCount)
+                {
+                    ammoCount = ammoCap + ammoCount;
+                    ammoCap = 0;
+                }
+                else
+                {
+                    ammoCap -= magCount - ammoCount;
+                    ammoCount = magCount;
+                }
+                
 
                 this.ammoDisplay.text = "Ammo: " + ammoCount + " / " + ammoCap;
             }
         }
 
-
         // Reloading
-        if (Input.GetKeyDown(KeyCode.R) && !reloading && ammoCount < magCount && ammoCap >= magCount - ammoCount)
+        if (Input.GetKeyDown(KeyCode.R) && !reloading && ammoCount < magCount && ammoCap > 0)
         {
             reloading = true;
             GetComponents<AudioSource>()[2].Play();
@@ -141,10 +151,24 @@ public class shootingScript : MonoBehaviour {
         {
             GetComponents<AudioSource>()[1].Play();
         }
-
+        if(aiming && !reloading)
+        {
+            if(transform.localPosition != aimPos)
+            {
+                this.transform.localPosition = Vector3.MoveTowards(this.transform.localPosition, aimPos, gunMoveSpeed * Time.deltaTime);
+            }
+        }
+        else if(!aiming && !reloading)
+        {
+            if(transform.localPosition != normalPos)
+            {
+                this.transform.localPosition = Vector3.MoveTowards(this.transform.localPosition, normalPos, gunMoveSpeed * Time.deltaTime);
+            }
+        }
 		// Holding right click, move gun to aim down sights.
 		if (Input.GetMouseButton (1) && !reloading) {
-			this.transform.localPosition = Vector3.MoveTowards (this.transform.localPosition, aimPos, gunMoveSpeed * Time.deltaTime);
+            aiming = true;
+			
 			cursor.GetComponentInChildren<Canvas> ().enabled = false;
 
             if (mainCam.fieldOfView >= zoomFov) { 
@@ -154,7 +178,7 @@ public class shootingScript : MonoBehaviour {
 
 		// Right click not pressed, keep gun in normal position.
 		if (!Input.GetMouseButton (1) && !reloading) {
-			this.transform.localPosition = Vector3.MoveTowards (this.transform.localPosition, normalPos, gunMoveSpeed * Time.deltaTime);
+            aiming = false;
 			cursor.GetComponentInChildren<Canvas> ().enabled = true;
 
             if (mainCam.fieldOfView <= normFov)
