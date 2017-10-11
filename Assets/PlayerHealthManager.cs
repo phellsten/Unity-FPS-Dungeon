@@ -9,19 +9,19 @@ public class PlayerHealthManager : MonoBehaviour {
     public int currentHealth;
     public Slider healthSlider;
     public Image damageImage;
-    // public AudioClip deathClip;
+    public AudioClip deathClip;
     public float flashSpeed = 5f;
     public Color flashColour = new Color(1f, 0f, 0f, 0.1f);
 
+    private AudioSource playerAudio;
 
-    // AudioSource playerAudio;
-    bool isDead;
-    bool damaged;
+    private bool isDead;
+    private bool damaged;
 
 
     void Awake()
     {
-        // playerAudio = GetComponent<AudioSource>();
+        playerAudio = GetComponent<AudioSource>();
         currentHealth = startingHealth;
     }
 
@@ -60,8 +60,8 @@ public class PlayerHealthManager : MonoBehaviour {
     {
         isDead = true;
 
-        // playerAudio.clip = deathClip;
-        // playerAudio.Play();
+        playerAudio.clip = deathClip;
+        playerAudio.Play();
 
     }
 
