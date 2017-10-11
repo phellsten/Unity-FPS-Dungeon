@@ -35,16 +35,17 @@ public class meleeScript : MonoBehaviour {
 				!weapon.GetComponent<shootingScript>().reloading && stabCooldown <= 0f) {
 			melee = true;
 			GetComponents<AudioSource>()[0].Play();
-			stabCooldown = 1f;
+			stabCooldown = 0.5f;
 
 			Ray ray = new Ray(source.transform.position, source.transform.forward);
 			RaycastHit hit;
 			bool raycasthit = Physics.Raycast(ray, out hit, 1f);
 			if (raycasthit) {
 				Debug.Log ("melee hit");
-				Instantiate(blood, hit.point, new Quaternion());
+
 				if (hit.collider.tag == "EnemyMonster" || hit.collider.tag == "EnemySkeleton")
 				{
+					Instantiate(blood, hit.point, new Quaternion());
 					if (hit.collider.tag == "EnemyMonster")
 					{
 						hit.collider.gameObject.GetComponent<MonsterController>().health -= 1f;
