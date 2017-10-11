@@ -9,6 +9,7 @@ public class shootingScript : MonoBehaviour {
 	public GameObject muzzle;
 	public GameObject source;
 	public GameObject cursor;
+	private GameObject meleeWeapon;
 
 	private Vector3 aimPos = new Vector3 (0f, -0.288f, 0.682f);
 	private Vector3 normalPos = new Vector3 (0.499f, -0.414f, 0.806f);
@@ -18,7 +19,7 @@ public class shootingScript : MonoBehaviour {
 	private float muzzleOffset = 1f;
 	private float rayDistance = 200f;
 
-    private bool aiming = false;
+    public bool aiming = false;
 
     private float zoomFov = 70f;
     private float normFov = 90f;
@@ -35,12 +36,13 @@ public class shootingScript : MonoBehaviour {
     private int ammoCap;
     private int magCount;
 
-    private bool reloading = false;
+    public bool reloading = false;
     private float reloadTimer = 0.8f;
 
     private void Start()
     {
         this.mainCam = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
+		this.meleeWeapon = GameObject.FindGameObjectWithTag ("Melee");
         this.ammoDisplay = GameObject.FindGameObjectWithTag("Ammo").GetComponent<Text>();
         this.ammoCount = 8;
         this.magCount = 8;
@@ -166,7 +168,7 @@ public class shootingScript : MonoBehaviour {
             }
         }
 		// Holding right click, move gun to aim down sights.
-		if (Input.GetMouseButton (1) && !reloading) {
+		if (Input.GetMouseButton (1) && !reloading && !meleeWeapon.GetComponent<meleeScript>().melee) {
             aiming = true;
 			
 			cursor.GetComponentInChildren<Canvas> ().enabled = false;
