@@ -14,6 +14,7 @@ public class PlayerHealthManager : MonoBehaviour {
     public Color flashColour = new Color(1f, 0f, 0f, 0.1f);
 
     private AudioSource playerAudio;
+    private charController charControl;
 
     private bool isDead;
     private bool damaged;
@@ -22,6 +23,7 @@ public class PlayerHealthManager : MonoBehaviour {
     void Awake()
     {
         playerAudio = GetComponent<AudioSource>();
+        charControl = GetComponent<charController>();
         currentHealth = startingHealth;
     }
 
@@ -59,7 +61,7 @@ public class PlayerHealthManager : MonoBehaviour {
     void Death()
     {
         isDead = true;
-
+        charControl.StopMovement();
         playerAudio.clip = deathClip;
         playerAudio.Play();
 

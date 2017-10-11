@@ -8,18 +8,29 @@ public class charController : MonoBehaviour {
 	public float speed = 0.1f;
 	public float jumpSpeed = 7.0f;
 	public Rigidbody rb;
+    public AudioClip walkSound;
+    public AudioClip sprintSound;
     public bool grounded = false;
+
     private bool moving = false;
+    private bool stopped = false;
+    private AudioSource audioSource;
+
 
 	void Start () {
 		rb = GetComponent<Rigidbody> ();
+        audioSource = GetComponent<AudioSource>();
 	}
 
 	void FixedUpdate() {
         if (Time.timeScale == 0.0f)
         {
-            GetComponents<AudioSource>()[0].Stop();
-            GetComponents<AudioSource>()[1].Stop();
+            audioSource.Stop();
+        }
+
+        if (stopped)
+        {
+            return;
         }
 
         groundedCheck ();
@@ -27,7 +38,7 @@ public class charController : MonoBehaviour {
 		// Can jump if we're on the ground and press space.
 		if (Input.GetKey (KeyCode.Space) && grounded) {
 			rb.velocity = new Vector3();
-            GetComponents<AudioSource>()[0].Stop();
+            audioSource.Stop();
             if (Input.GetKey (KeyCode.LeftControl)) {
 				// Crouch jumping
 				speed = baseSpeed;
@@ -80,39 +91,31 @@ public class charController : MonoBehaviour {
         {
             if (!Input.GetKey(KeyCode.LeftShift))
             {
-                // If not sprinting, stop playing sprinting sound.
-                GetComponents<AudioSource>()[1].Stop();
-
-                // If walking sound isn't playing, play it.
-                if (!GetComponents<AudioSource>()[0].isPlaying)
+                audioSource.clip = walkSound;
+                if (!audioSource.isPlaying)
                 {
-                    GetComponents<AudioSource>()[0].Play();
+                    audioSource.Play();
                 }
             }
 
             if (Input.GetKey(KeyCode.LeftShift))
             {
-                // If we are sprinting, stop the walking sound.
-                GetComponents<AudioSource>()[0].Stop();
-
-                // If the sprinting sound isn't playing, play it.
-                if (!GetComponents<AudioSource>()[1].isPlaying)
+                audioSource.clip = sprintSound;
+                if (!audioSource.isPlaying)
                 {
-                    GetComponents<AudioSource>()[1].Play();
+                    audioSource.Play();
                 }
             }
 
         }
         else
         {
-            GetComponents<AudioSource>()[0].Stop();
-            GetComponents<AudioSource>()[1].Stop();
+            audioSource.Stop();
         }
 
         if(!grounded)
         {
-            GetComponents<AudioSource>()[0].Stop();
-            GetComponents<AudioSource>()[1].Stop();
+            audioSource.Stop();
         }
 
 	}
@@ -143,4 +146,9 @@ public class charController : MonoBehaviour {
 			grounded = false;
 		}
 	}
+
+    public void StopMovement()
+    {
+        stopped = true;
+    }
 }
