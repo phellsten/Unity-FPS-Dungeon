@@ -40,7 +40,7 @@ public class PlayerHealthManager : MonoBehaviour {
     }
 
 
-    public void TakeDamage(int damageAmount)
+    public void ApplyDamage(int damageAmount)
     {
         damaged = true;
         currentHealth -= damageAmount;

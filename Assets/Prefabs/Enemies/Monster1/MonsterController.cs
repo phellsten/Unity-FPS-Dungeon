@@ -9,15 +9,18 @@ public class MonsterController : MonoBehaviour {
     private NavMeshAgent nav;
     private Animator anim;
     private AnimationClip clip;
+    private GameObject player;
     private Transform playerTransform;
     private IEnumerator moveChecker;
+    private bool inRange = false;
     //private bool moving = false;
     //private bool running = false;
-	public float health = 5;
+    public float health = 5;
 
     public static float moveCheckDelay = 0.1f;
+    public static int attackDamage = 1;
 
-	public GameObject explosion;
+    public GameObject explosion;
 
 	void Start() {
 		explosion = (GameObject)(Resources.Load ("explosion"));
@@ -27,7 +30,8 @@ public class MonsterController : MonoBehaviour {
         nav = GetComponent<NavMeshAgent>();
         anim = GetComponentInChildren<Animator>();
         AddAttackAnimEvent();
-        playerTransform = GameObject.FindGameObjectWithTag("Player").transform;
+        player = GameObject.FindGameObjectWithTag("Player");
+        playerTransform = player.transform;
         moveChecker = CheckPlayerPosition();
         StartCoroutine(moveChecker);
         anim.SetBool("Walking", true);
@@ -41,7 +45,7 @@ public class MonsterController : MonoBehaviour {
         animEvent.stringParameter = "Attacking";
         animEvent.time = 0.12f;
         animEvent.messageOptions = SendMessageOptions.DontRequireReceiver;
-        clip = anim.runtimeAnimatorController.animationClips[0];
+        clip = anim.runtimeAnimatorController.animationClips[2];
         clip.AddEvent(animEvent);
     }
 
@@ -84,6 +88,10 @@ public class MonsterController : MonoBehaviour {
 
     public void Attack(String message)
     {
+        if (inRange)
+        {
+            player.GetComponent<PlayerHealthManager>().ApplyDamage(attackDamage);
+        }
         Debug.Log("Monster AnimEvent: " + message);
     }
 
@@ -93,6 +101,7 @@ public class MonsterController : MonoBehaviour {
         if (collision.gameObject.tag == "Player")
         {
             StopCoroutine(moveChecker);
+            inRange = true;
             anim.SetBool("Walking", false);
         }
     }
@@ -103,6 +112,7 @@ public class MonsterController : MonoBehaviour {
         if (collision.gameObject.tag == "Player")
         {
             StartCoroutine(moveChecker);
+            inRange = false; ;
             anim.SetBool("Walking", true);
         }
     }
