@@ -46,7 +46,7 @@ public class shootingScript : MonoBehaviour {
         this.ammoDisplay = GameObject.FindGameObjectWithTag("Ammo").GetComponent<Text>();
         this.ammoCount = 8;
         this.magCount = 8;
-        this.ammoCap = 24;
+        this.ammoCap = 64;
         ammoDisplay.text = "Ammo: " + ammoCount + " / " + ammoCap;
     }
 

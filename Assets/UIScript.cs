@@ -15,7 +15,7 @@ public class UIScript : MonoBehaviour {
 	}
 	
 	void PlayGame() {
-		SceneManager.LoadScene ("main");
+		SceneManager.LoadScene ("level1");
 	}
 
 	void QuitGame() {

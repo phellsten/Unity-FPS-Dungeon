@@ -8,12 +8,13 @@ public class PlayerHealthManager : MonoBehaviour {
     public int startingHealth = 100;
     public int currentHealth;
     public Slider healthSlider;
-    public Image damageImage;
+	public Image damageImage;
     public AudioClip deathClip;
+	public AudioClip deathTune;
     public float flashSpeed = 5f;
     public Color flashColour = new Color(1f, 0f, 0f, 0.1f);
 
-    private AudioSource playerAudio;
+	private AudioSource playerAudio, playerAudio2;
     private charController charControl;
 
     private bool isDead;
@@ -22,9 +23,12 @@ public class PlayerHealthManager : MonoBehaviour {
 
     void Awake()
     {
-        playerAudio = GetComponent<AudioSource>();
+        playerAudio = GetComponents<AudioSource>()[0];
+		playerAudio2 = GetComponents<AudioSource>()[1];
         charControl = GetComponent<charController>();
         currentHealth = startingHealth;
+		GameObject.Find ("Dead").GetComponent<RawImage> ().enabled = false;
+
     }
 
 
@@ -64,6 +68,10 @@ public class PlayerHealthManager : MonoBehaviour {
         charControl.StopMovement();
         playerAudio.clip = deathClip;
         playerAudio.Play();
+		playerAudio2.clip = deathTune;
+		playerAudio2.Play();
+		GameObject.Find ("Dead").GetComponent<RawImage> ().enabled = true;
+
 
     }
 
