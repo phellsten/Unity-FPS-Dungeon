@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -7,8 +8,10 @@ public class PlayerHealthManager : MonoBehaviour {
 
     public int startingHealth = 100;
     public int currentHealth;
+    public int heartValue = 5;
     public Slider healthSlider;
 	public Image damageImage;
+    public Image healthImage;
     public AudioClip deathClip;
 	public AudioClip deathTune;
     public float flashSpeed = 5f;
@@ -28,6 +31,7 @@ public class PlayerHealthManager : MonoBehaviour {
         charControl = GetComponent<charController>();
         currentHealth = startingHealth;
 		GameObject.Find ("Dead").GetComponent<RawImage> ().enabled = false;
+        updateHealthBar();
 
     }
 
@@ -53,6 +57,8 @@ public class PlayerHealthManager : MonoBehaviour {
 
         healthSlider.value = currentHealth;
 
+        updateHealthBar();
+
         //playerAudio.Play();
 
         if (currentHealth <= 0 && !isDead)
@@ -61,6 +67,57 @@ public class PlayerHealthManager : MonoBehaviour {
         }
     }
 
+    private void updateHealthBar()
+    {
+        int h = (int)(currentHealth / heartValue);
+        float rem = (currentHealth % heartValue) / (float)heartValue;
+
+        if (rem != 0)
+        {
+            h++;
+        }
+        
+        GameObject healthBar = GameObject.FindGameObjectWithTag("HealthBar");
+        List<GameObject> hearts = new List<GameObject>();
+
+        foreach (Transform heart in healthBar.transform)
+        {
+            hearts.Add(heart.gameObject);
+        }
+
+        int heartsNum = hearts.Count;
+
+        Debug.Log("h=" + currentHealth + ", n=" + h + ", l="+heartsNum+", r="+rem);
+
+        if (heartsNum != h)
+        {
+            while (heartsNum >= h)
+            {
+                hearts[heartsNum - 1].transform.SetParent(null);
+                Destroy(hearts[heartsNum-1]);
+                heartsNum--;
+            }
+
+            while (heartsNum < h)
+            {
+                var newHeart = GameObject.Instantiate(healthImage);
+                newHeart.transform.SetParent(healthBar.transform, false);
+                heartsNum++;
+            }
+        }
+
+        if (rem != 0)
+        {
+            Debug.Log("heart cull: " + heartsNum);
+            var heart = healthBar.transform.GetChild(heartsNum-1);
+            heart.GetComponent<Image>().fillAmount = 1.0f - rem;
+        }
+        else
+        {
+            var heart = healthBar.transform.GetChild(heartsNum - 1);
+            heart.GetComponent<Image>().fillAmount = 1.0f;
+        }
+    }
 
     void Death()
     {

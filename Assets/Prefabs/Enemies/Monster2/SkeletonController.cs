@@ -90,7 +90,7 @@ public class SkeletonController : MonoBehaviour {
         {
             player.GetComponent<PlayerHealthManager>().ApplyDamage(attackDamage);
         }
-        Debug.Log("Skeleton AnimEvent: " + message);
+        // Debug.Log("Skeleton AnimEvent: " + message);
     }
 
     // Stop when encountered the player
