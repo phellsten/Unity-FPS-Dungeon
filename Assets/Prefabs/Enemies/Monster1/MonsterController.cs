@@ -1,8 +1,8 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+
 
 public class MonsterController : MonoBehaviour {
 
@@ -16,6 +16,8 @@ public class MonsterController : MonoBehaviour {
     //private bool moving = false;
     //private bool running = false;
     public float health = 5;
+
+	public shootingScript script;
 
     public static float moveCheckDelay = 0.1f;
     public static int attackDamage = 1;
@@ -59,6 +61,11 @@ public class MonsterController : MonoBehaviour {
         if (health <= 0) {
 			    Instantiate (explosion, this.transform.position, new Quaternion ());
                 this.GetComponent<scoreManager>().incrementScore();
+
+				int range = Random.Range (2, 7);
+				GameObject.FindGameObjectWithTag ("Weapon").GetComponent<shootingScript>().ammoCap += range;
+				GameObject.FindGameObjectWithTag ("Weapon").GetComponent<shootingScript> ().refreshAmmo ();
+
                 Destroy (this.gameObject);
 		    }
         //if (!moving && running)
@@ -92,7 +99,7 @@ public class MonsterController : MonoBehaviour {
     }
 
 
-    public void Attack(String message)
+    public void Attack(string message)
     {
         if (inRange)
         {

@@ -33,7 +33,7 @@ public class shootingScript : MonoBehaviour {
 
     private Text ammoDisplay;
     private int ammoCount;
-    private int ammoCap;
+    public int ammoCap;
     private int magCount;
 
     public bool reloading = false;
@@ -49,6 +49,10 @@ public class shootingScript : MonoBehaviour {
         this.ammoCap = 64;
         ammoDisplay.text = "Ammo: " + ammoCount + " / " + ammoCap;
     }
+
+	public void refreshAmmo() {
+		ammoDisplay.text = "Ammo: " + ammoCount + " / " + ammoCap;
+	}
 
     // Update is called once per frame
     void Update () {

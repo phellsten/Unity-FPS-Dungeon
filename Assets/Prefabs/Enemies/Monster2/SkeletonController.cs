@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
@@ -76,6 +75,10 @@ public class SkeletonController : MonoBehaviour {
         if (health <= 0) {
 			      Instantiate (explosion, this.transform.position, new Quaternion ());
                   this.GetComponent<scoreManager>().incrementScore();
+				  int range = Random.Range (2, 7);
+				  GameObject.FindGameObjectWithTag ("Weapon").GetComponent<shootingScript>().ammoCap += range;
+				  GameObject.FindGameObjectWithTag ("Weapon").GetComponent<shootingScript> ().refreshAmmo ();
+
 			      Destroy (this.gameObject);
 		    }
         if (Input.GetKeyDown(KeyCode.Keypad2))
@@ -84,7 +87,7 @@ public class SkeletonController : MonoBehaviour {
         }
     }
 
-    public void Attack(String message)
+    public void Attack(string message)
     {
         if (inRange)
         {
