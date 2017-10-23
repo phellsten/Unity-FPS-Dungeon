@@ -8,10 +8,13 @@ using UnityEngine;
 public class UIScript : MonoBehaviour {
 	public Button playButton;
 	public Button quitButton;
+	public Button controls;
+
 
 	void Start () {
 		playButton.onClick.AddListener (PlayGame);
 		quitButton.onClick.AddListener (QuitGame);
+		controls.onClick.AddListener (Controls);
 	}
 	
 	void PlayGame() {
@@ -21,4 +24,10 @@ public class UIScript : MonoBehaviour {
 	void QuitGame() {
 		Application.Quit();
 	}
+
+	void Controls() {
+		SceneManager.LoadScene ("Controls");
+
+	}
+
 }
