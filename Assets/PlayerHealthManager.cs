@@ -14,13 +14,21 @@ public class PlayerHealthManager : MonoBehaviour {
     public Image healthImage;
     public AudioClip deathClip;
 	public AudioClip deathTune;
+	public AudioClip winTune;
+
+	public GameObject cursor;
+
+	public bool playedtune = false;
+
     public float flashSpeed = 5f;
     public Color flashColour = new Color(1f, 0f, 0f, 0.1f);
 
-	private AudioSource playerAudio, playerAudio2;
+	public bool gameWon = false;
+
+	private AudioSource playerAudio, playerAudio2, playerAudio3;
     private charController charControl;
 
-    private bool isDead;
+    public bool isDead;
     private bool damaged;
 
 
@@ -28,6 +36,8 @@ public class PlayerHealthManager : MonoBehaviour {
     {
         playerAudio = GetComponents<AudioSource>()[0];
 		playerAudio2 = GetComponents<AudioSource>()[1];
+		playerAudio3 = GetComponents<AudioSource>()[2];
+
         charControl = GetComponent<charController>();
         currentHealth = startingHealth;
 		GameObject.Find ("Dead").GetComponent<RawImage> ().enabled = false;
@@ -38,6 +48,13 @@ public class PlayerHealthManager : MonoBehaviour {
 
     void Update()
     {
+		if (gameWon) {
+			
+			playerAudio.Stop ();
+			playerAudio2.Stop ();
+			return;
+		}
+
         if (damaged)
         {
             damageImage.color = flashColour;
@@ -119,8 +136,9 @@ public class PlayerHealthManager : MonoBehaviour {
         }
     }
 
-    void Death()
+    public void Death()
     {
+		cursor.GetComponentInChildren<Canvas> ().enabled = false;
         isDead = true;
         charControl.StopMovement();
         playerAudio.clip = deathClip;
@@ -137,4 +155,11 @@ public class PlayerHealthManager : MonoBehaviour {
     {
         UnityEngine.SceneManagement.SceneManager.LoadScene(0);
     }
+
+	public void win() {
+		playerAudio3.clip = winTune;
+		playerAudio3.Play ();
+		cursor.GetComponentInChildren<Canvas> ().enabled = false;
+
+	}
 }

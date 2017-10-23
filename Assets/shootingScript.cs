@@ -56,6 +56,12 @@ public class shootingScript : MonoBehaviour {
 
     // Update is called once per frame
     void Update () {
+		if(GameObject.Find("Player").GetComponent<PlayerHealthManager>().isDead) {
+			return;
+		}
+		if(GameObject.Find("Player").GetComponent<PlayerHealthManager>().gameWon) {
+			return;
+		}
 		// Game is paused, don't shoot.
 		if (Time.timeScale == 0.0f) {
 			return;

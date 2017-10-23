@@ -32,6 +32,9 @@ public class charController : MonoBehaviour {
         {
             return;
         }
+		if(GameObject.Find("Player").GetComponent<PlayerHealthManager>().gameWon) {
+			return;
+		}
 
         groundedCheck ();
 
@@ -123,6 +126,9 @@ public class charController : MonoBehaviour {
 	// Upon player colliding with an object, update grounded status.
     void OnCollisionEnter(Collision collision)
     {
+		if (collision.collider.tag == "Lava") {
+			this.GetComponent<PlayerHealthManager> ().Death();
+		}
         grounded = true;
     }
     private void OnCollisionExit(Collision collision)

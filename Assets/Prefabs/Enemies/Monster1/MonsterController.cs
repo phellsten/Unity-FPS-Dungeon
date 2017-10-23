@@ -65,7 +65,9 @@ public class MonsterController : MonoBehaviour {
 				int range = Random.Range (2, 7);
 				GameObject.FindGameObjectWithTag ("Weapon").GetComponent<shootingScript>().ammoCap += range;
 				GameObject.FindGameObjectWithTag ("Weapon").GetComponent<shootingScript> ().refreshAmmo ();
-
+			if (this.name == "Boss") {
+				this.GetComponent<bossScript> ().death ();
+			}
                 Destroy (this.gameObject);
 		    }
         //if (!moving && running)
