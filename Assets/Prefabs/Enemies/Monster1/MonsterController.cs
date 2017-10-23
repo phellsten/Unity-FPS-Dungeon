@@ -28,7 +28,7 @@ public class MonsterController : MonoBehaviour {
 
     void Awake () {
         nav = GetComponent<NavMeshAgent>();
-        anim = GetComponentInChildren<Animator>();
+        anim = GetComponent<Animator>();
         AddAttackAnimEvent();
         player = GameObject.FindGameObjectWithTag("Player");
         playerTransform = player.transform;
@@ -40,13 +40,19 @@ public class MonsterController : MonoBehaviour {
     private void AddAttackAnimEvent()
     {
         //Debug.Log("Create animEvent");
-        AnimationEvent animEvent = new AnimationEvent();
-        animEvent.functionName = "Attack";
-        animEvent.stringParameter = "Attacking";
-        animEvent.time = 0.12f;
-        animEvent.messageOptions = SendMessageOptions.DontRequireReceiver;
+        AnimationEvent animEvent1 = new AnimationEvent();
+        animEvent1.functionName = "Attack";
+        animEvent1.stringParameter = "Attacking";
+        animEvent1.time = 0.10f;
+        animEvent1.messageOptions = SendMessageOptions.DontRequireReceiver;
+        AnimationEvent animEvent2 = new AnimationEvent();
+        animEvent2.functionName = "Attack";
+        animEvent2.stringParameter = "Attacking";
+        animEvent2.time = 0.23f;
+        animEvent2.messageOptions = SendMessageOptions.DontRequireReceiver;
         clip = anim.runtimeAnimatorController.animationClips[2];
-        clip.AddEvent(animEvent);
+        clip.AddEvent(animEvent1);
+        clip.AddEvent(animEvent2);
     }
 
     void Update () {
@@ -102,7 +108,7 @@ public class MonsterController : MonoBehaviour {
         {
             StopCoroutine(moveChecker);
             inRange = true;
-            anim.SetBool("Walking", false);
+            anim.SetTrigger("Attack");
         }
     }
 
@@ -112,7 +118,7 @@ public class MonsterController : MonoBehaviour {
         if (collision.gameObject.tag == "Player")
         {
             StartCoroutine(moveChecker);
-            inRange = false; ;
+            inRange = false;
             anim.SetBool("Walking", true);
         }
     }
