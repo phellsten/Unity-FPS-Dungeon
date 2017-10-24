@@ -1,9 +1,7 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-public class KeyBindings : MonoBehaviour {
-
+public class KeyBindings : MonoBehaviour
+{
     private static KeyCode forwardKey = KeyCode.W;
     private static KeyCode leftKey = KeyCode.A;
     private static KeyCode backwardKey = KeyCode.S;

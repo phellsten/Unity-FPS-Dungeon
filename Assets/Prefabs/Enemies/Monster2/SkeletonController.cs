@@ -1,11 +1,9 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
-using UnityEngine.UI;
 
-public class SkeletonController : MonoBehaviour {
-
+public class SkeletonController : MonoBehaviour
+{
     private NavMeshAgent nav;
     private Animator anim;
     private AnimationClip clip;
@@ -13,18 +11,20 @@ public class SkeletonController : MonoBehaviour {
     private Transform playerTransform;
     private IEnumerator moveChecker;
     private bool inRange = false;
-	public float health = 5;
+    public float health = 5;
 
     public static float moveCheckDelay = 0.1f;
     public static int attackDamage = 1;
 
-	public GameObject explosion;
+    public GameObject explosion;
 
-	void Start() {
-		explosion = (GameObject)(Resources.Load ("explosion"));
-	}
+    private void Start()
+    {
+        explosion = (GameObject)(Resources.Load("explosion"));
+    }
 
-    void Awake () {
+    private void Awake()
+    {
         nav = GetComponent<NavMeshAgent>();
         anim = GetComponent<Animator>();
         AddAttackAnimEvent();
@@ -33,7 +33,8 @@ public class SkeletonController : MonoBehaviour {
         moveChecker = CheckPlayerPosition();
         StartCoroutine(moveChecker);
         anim.SetBool("Walking", true);
-	}
+    }
+
     private void AddAttackAnimEvent()
     {
         AnimationEvent animEvent = new AnimationEvent();
@@ -45,16 +46,18 @@ public class SkeletonController : MonoBehaviour {
         clip.AddEvent(animEvent);
     }
 
-    void Update () {
-        if (health <= 0) {
-			Instantiate (explosion, this.transform.position, new Quaternion ());
+    private void Update()
+    {
+        if (health <= 0)
+        {
+            Instantiate(explosion, this.transform.position, new Quaternion());
             this.GetComponent<ScoreManager>().incrementScore();
-			int range = Random.Range (2, 7);
-			GameObject.FindGameObjectWithTag ("Weapon").GetComponent<ShootingScript>().ammoCap += range;
-			GameObject.FindGameObjectWithTag ("Weapon").GetComponent<ShootingScript> ().refreshAmmo ();
+            int range = Random.Range(2, 7);
+            GameObject.FindGameObjectWithTag("Weapon").GetComponent<ShootingScript>().ammoCap += range;
+            GameObject.FindGameObjectWithTag("Weapon").GetComponent<ShootingScript>().refreshAmmo();
 
-			Destroy (this.gameObject);
-		}
+            Destroy(this.gameObject);
+        }
         if (Input.GetKeyDown(KeyCode.Keypad2))
         {
             anim.SetTrigger("Attack");
@@ -97,8 +100,8 @@ public class SkeletonController : MonoBehaviour {
     }
 
     // Reassigns movement target to player location every x seconds.
-    IEnumerator CheckPlayerPosition()
-    {     
+    private IEnumerator CheckPlayerPosition()
+    {
         while (true)
         {
             nav.SetDestination(playerTransform.position);

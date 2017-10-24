@@ -1,59 +1,54 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class PlayerHealthManager : MonoBehaviour {
-
+public class PlayerHealthManager : MonoBehaviour
+{
     public int startingHealth = 100;
     public int currentHealth;
     public int heartValue = 5;
     public Slider healthSlider;
-	public Image damageImage;
+    public Image damageImage;
     public Image healthImage;
     public AudioClip deathClip;
-	public AudioClip deathTune;
-	public AudioClip winTune;
+    public AudioClip deathTune;
+    public AudioClip winTune;
 
-	public GameObject cursor;
+    public GameObject cursor;
 
-	public bool playedtune = false;
+    public bool playedtune = false;
 
     public float flashSpeed = 5f;
     public Color flashColour = new Color(1f, 0f, 0f, 0.1f);
 
-	public bool gameWon = false;
+    public bool gameWon = false;
 
-	private AudioSource playerAudio, playerAudio2, playerAudio3;
+    private AudioSource playerAudio, playerAudio2, playerAudio3;
     private CharController charControl;
 
     public bool isDead;
     private bool damaged;
 
-
-    void Awake()
+    private void Awake()
     {
         playerAudio = GetComponents<AudioSource>()[0];
-		playerAudio2 = GetComponents<AudioSource>()[1];
-		playerAudio3 = GetComponents<AudioSource>()[2];
+        playerAudio2 = GetComponents<AudioSource>()[1];
+        playerAudio3 = GetComponents<AudioSource>()[2];
 
         charControl = GetComponent<CharController>();
         currentHealth = startingHealth;
-		GameObject.Find ("Dead").GetComponent<RawImage> ().enabled = false;
+        GameObject.Find("Dead").GetComponent<RawImage>().enabled = false;
         updateHealthBar();
-
     }
 
-
-    void Update()
+    private void Update()
     {
-		if (gameWon) {
-			
-			playerAudio.Stop ();
-			playerAudio2.Stop ();
-			return;
-		}
+        if (gameWon)
+        {
+            playerAudio.Stop();
+            playerAudio2.Stop();
+            return;
+        }
 
         if (damaged)
         {
@@ -66,7 +61,6 @@ public class PlayerHealthManager : MonoBehaviour {
         damaged = false;
     }
 
-
     public void ApplyDamage(int damageAmount)
     {
         damaged = true;
@@ -75,8 +69,6 @@ public class PlayerHealthManager : MonoBehaviour {
         healthSlider.value = currentHealth;
 
         updateHealthBar();
-
-        //playerAudio.Play();
 
         if (currentHealth <= 0 && !isDead)
         {
@@ -93,7 +85,7 @@ public class PlayerHealthManager : MonoBehaviour {
         {
             h++;
         }
-        
+
         GameObject healthBar = GameObject.FindGameObjectWithTag("HealthBar");
         List<GameObject> hearts = new List<GameObject>();
 
@@ -104,14 +96,14 @@ public class PlayerHealthManager : MonoBehaviour {
 
         int heartsNum = hearts.Count;
 
-        Debug.Log("h=" + currentHealth + ", n=" + h + ", l="+heartsNum+", r="+rem);
+        Debug.Log("h=" + currentHealth + ", n=" + h + ", l=" + heartsNum + ", r=" + rem);
 
         if (heartsNum != h)
         {
             while (heartsNum >= h)
             {
                 hearts[heartsNum - 1].transform.SetParent(null);
-                Destroy(hearts[heartsNum-1]);
+                Destroy(hearts[heartsNum - 1]);
                 heartsNum--;
             }
 
@@ -126,7 +118,7 @@ public class PlayerHealthManager : MonoBehaviour {
         if (rem != 0)
         {
             Debug.Log("heart cull: " + heartsNum);
-            var heart = healthBar.transform.GetChild(heartsNum-1);
+            var heart = healthBar.transform.GetChild(heartsNum - 1);
             heart.GetComponent<Image>().fillAmount = 1.0f - rem;
         }
         else
@@ -138,28 +130,25 @@ public class PlayerHealthManager : MonoBehaviour {
 
     public void Death()
     {
-		cursor.GetComponentInChildren<Canvas> ().enabled = false;
+        cursor.GetComponentInChildren<Canvas>().enabled = false;
         isDead = true;
         charControl.StopMovement();
         playerAudio.clip = deathClip;
         playerAudio.Play();
-		playerAudio2.clip = deathTune;
-		playerAudio2.Play();
-		GameObject.Find ("Dead").GetComponent<RawImage> ().enabled = true;
-
-
+        playerAudio2.clip = deathTune;
+        playerAudio2.Play();
+        GameObject.Find("Dead").GetComponent<RawImage>().enabled = true;
     }
-
 
     public void RestartLevel()
     {
         UnityEngine.SceneManagement.SceneManager.LoadScene(0);
     }
 
-	public void win() {
-		playerAudio3.clip = winTune;
-		playerAudio3.Play ();
-		cursor.GetComponentInChildren<Canvas> ().enabled = false;
-
-	}
+    public void win()
+    {
+        playerAudio3.clip = winTune;
+        playerAudio3.Play();
+        cursor.GetComponentInChildren<Canvas>().enabled = false;
+    }
 }

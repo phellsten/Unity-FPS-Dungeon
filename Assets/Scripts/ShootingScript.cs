@@ -1,23 +1,22 @@
 ﻿// Paul Hellsten - 758077
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine.UI;
 using UnityEngine;
+using UnityEngine.UI;
 
-public class ShootingScript : MonoBehaviour {
-	public GameObject blood;
-	public GameObject muzzle;
-	public GameObject source;
-	public GameObject cursor;
-	private GameObject meleeWeapon;
+public class ShootingScript : MonoBehaviour
+{
+    public GameObject blood;
+    public GameObject muzzle;
+    public GameObject source;
+    public GameObject cursor;
+    private GameObject meleeWeapon;
 
-	private Vector3 aimPos = new Vector3 (0f, -0.288f, 0.682f);
-	private Vector3 normalPos = new Vector3 (0.499f, -0.414f, 0.806f);
+    private Vector3 aimPos = new Vector3(0f, -0.288f, 0.682f);
+    private Vector3 normalPos = new Vector3(0.499f, -0.414f, 0.806f);
     private Vector3 reloadPos = new Vector3(0.499f, -0.857f, 0.806f);
 
-	private float gunMoveSpeed = 5f;
-	private float muzzleOffset = 1f;
-	private float rayDistance = 200f;
+    private float gunMoveSpeed = 5f;
+    private float muzzleOffset = 1f;
+    private float rayDistance = 200f;
 
     public bool aiming = false;
 
@@ -42,7 +41,7 @@ public class ShootingScript : MonoBehaviour {
     private void Start()
     {
         this.mainCam = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
-		this.meleeWeapon = GameObject.FindGameObjectWithTag ("Melee");
+        this.meleeWeapon = GameObject.FindGameObjectWithTag("Melee");
         this.ammoDisplay = GameObject.FindGameObjectWithTag("Ammo").GetComponent<Text>();
         this.ammoCount = 8;
         this.magCount = 8;
@@ -50,24 +49,29 @@ public class ShootingScript : MonoBehaviour {
         ammoDisplay.text = "Ammo: " + ammoCount + " / " + ammoCap;
     }
 
-	public void refreshAmmo() {
-		ammoDisplay.text = "Ammo: " + ammoCount + " / " + ammoCap;
-	}
+    public void refreshAmmo()
+    {
+        ammoDisplay.text = "Ammo: " + ammoCount + " / " + ammoCap;
+    }
 
     // Update is called once per frame
-    void Update () {
-		if(GameObject.Find("Player").GetComponent<PlayerHealthManager>().isDead) {
-			return;
-		}
-		if(GameObject.Find("Player").GetComponent<PlayerHealthManager>().gameWon) {
-			return;
-		}
-		// Game is paused, don't shoot.
-		if (Time.timeScale == 0.0f) {
-			return;
-		}
+    private void Update()
+    {
+        if (GameObject.Find("Player").GetComponent<PlayerHealthManager>().isDead)
+        {
+            return;
+        }
+        if (GameObject.Find("Player").GetComponent<PlayerHealthManager>().gameWon)
+        {
+            return;
+        }
+        // Game is paused, don't shoot.
+        if (Time.timeScale == 0.0f)
+        {
+            return;
+        }
 
-        if(reloading)
+        if (reloading)
         {
             reloadTimer -= Time.deltaTime;
 
@@ -95,7 +99,6 @@ public class ShootingScript : MonoBehaviour {
                     ammoCap -= magCount - ammoCount;
                     ammoCount = magCount;
                 }
-                
 
                 this.ammoDisplay.text = "Ammo: " + ammoCount + " / " + ammoCap;
             }
@@ -107,8 +110,8 @@ public class ShootingScript : MonoBehaviour {
             reloading = true;
             GetComponents<AudioSource>()[2].Play();
         }
-        
-        if(this.transform.localPosition.y > yNormalHeight && !reloading)
+
+        if (this.transform.localPosition.y > yNormalHeight && !reloading)
         {
             // Return gun to normal height after recoil
             this.transform.localPosition = Vector3.MoveTowards(this.transform.localPosition, new Vector3(this.transform.localPosition.x, yNormalHeight, this.transform.localPosition.z), 5f * Time.deltaTime);
@@ -117,7 +120,7 @@ public class ShootingScript : MonoBehaviour {
         if (this.transform.localRotation != new Quaternion(0f, 1f, 0f, 0f) && !reloading)
         {
             // Return gun to normal rotation after recoil
-            this.transform.localRotation = Quaternion.Lerp(this.transform.localRotation, new Quaternion(0f,1f,0f,0f), 10f * Time.deltaTime);
+            this.transform.localRotation = Quaternion.Lerp(this.transform.localRotation, new Quaternion(0f, 1f, 0f, 0f), 10f * Time.deltaTime);
         }
 
         // Shooting
@@ -135,7 +138,6 @@ public class ShootingScript : MonoBehaviour {
             bool raycasthit = Physics.Raycast(ray, out hit, rayDistance);
 
             // Recoil animation
-            //this.transform.localPosition = Vector3.MoveTowards(this.transform.localPosition, new Vector3(this.transform.localPosition.x, 0f, this.transform.localPosition.z), 25f * Time.deltaTime);
             this.transform.localRotation = Quaternion.Lerp(this.transform.localRotation, recoilRot, 10f * Time.deltaTime);
 
             GetComponents<AudioSource>()[0].Play();
@@ -145,7 +147,7 @@ public class ShootingScript : MonoBehaviour {
                 // Ray hit enemy
                 if (hit.collider.tag == "EnemyMonster" || hit.collider.tag == "EnemySkeleton")
                 {
-                    // Create blood effect, 
+                    // Create blood effect,
                     Debug.DrawLine(ray.origin, hit.point, Color.yellow);
                     Instantiate(blood, hit.point, new Quaternion());
                     if (hit.collider.tag == "EnemyMonster")
@@ -163,51 +165,54 @@ public class ShootingScript : MonoBehaviour {
         {
             GetComponents<AudioSource>()[1].Play();
         }
-        if(aiming && !reloading)
+        if (aiming && !reloading)
         {
-            if(transform.localPosition != aimPos)
+            if (transform.localPosition != aimPos)
             {
                 this.transform.localPosition = Vector3.MoveTowards(this.transform.localPosition, aimPos, gunMoveSpeed * Time.deltaTime);
             }
         }
-        else if(!aiming && !reloading)
+        else if (!aiming && !reloading)
         {
-            if(transform.localPosition != normalPos)
+            if (transform.localPosition != normalPos)
             {
                 this.transform.localPosition = Vector3.MoveTowards(this.transform.localPosition, normalPos, gunMoveSpeed * Time.deltaTime);
             }
         }
-		// Holding right click, move gun to aim down sights.
-		if (Input.GetKey(KeyBindings.FocusAimKey) && !reloading && !meleeWeapon.GetComponent<MeleeScript>().melee) {
+        // Holding right click, move gun to aim down sights.
+        if (Input.GetKey(KeyBindings.FocusAimKey) && !reloading && !meleeWeapon.GetComponent<MeleeScript>().melee)
+        {
             aiming = true;
-			
-			cursor.GetComponentInChildren<Canvas> ().enabled = false;
 
-            if (mainCam.fieldOfView >= zoomFov) { 
+            cursor.GetComponentInChildren<Canvas>().enabled = false;
+
+            if (mainCam.fieldOfView >= zoomFov)
+            {
                 mainCam.fieldOfView -= fovMoveSpeed * Time.deltaTime;
             }
         }
 
-		// Right click not pressed, keep gun in normal position.
-		if (!Input.GetKey(KeyBindings.FocusAimKey) && !reloading) {
+        // Right click not pressed, keep gun in normal position.
+        if (!Input.GetKey(KeyBindings.FocusAimKey) && !reloading)
+        {
             aiming = false;
-			cursor.GetComponentInChildren<Canvas> ().enabled = true;
+            cursor.GetComponentInChildren<Canvas>().enabled = true;
 
             if (mainCam.fieldOfView <= normFov)
             {
                 mainCam.fieldOfView += fovMoveSpeed * Time.deltaTime;
             }
         }
-        
+
         // Bound field of view
         if (mainCam.fieldOfView > normFov)
         {
             mainCam.fieldOfView = normFov;
         }
 
-        if(mainCam.fieldOfView < zoomFov)
+        if (mainCam.fieldOfView < zoomFov)
         {
             mainCam.fieldOfView = zoomFov;
         }
-	}
+    }
 }

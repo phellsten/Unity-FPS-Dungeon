@@ -1,33 +1,33 @@
 ﻿// Paul Hellsten - 758077
-using System.Collections;
-using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-using UnityEngine;
 
-public class MainMenuScript : MonoBehaviour {
-	public Button playButton;
-	public Button quitButton;
-	public Button controls;
+public class MainMenuScript : MonoBehaviour
+{
+    public Button playButton;
+    public Button quitButton;
+    public Button controls;
 
+    private void Start()
+    {
+        playButton.onClick.AddListener(PlayGame);
+        quitButton.onClick.AddListener(QuitGame);
+        controls.onClick.AddListener(Controls);
+    }
 
-	void Start () {
-		playButton.onClick.AddListener (PlayGame);
-		quitButton.onClick.AddListener (QuitGame);
-		controls.onClick.AddListener (Controls);
-	}
-	
-	void PlayGame() {
-		SceneManager.LoadScene ("level1");
-	}
+    private void PlayGame()
+    {
+        SceneManager.LoadScene("level1");
+    }
 
-	void QuitGame() {
-		Application.Quit();
-	}
+    private void QuitGame()
+    {
+        Application.Quit();
+    }
 
-	void Controls() {
-		SceneManager.LoadScene ("ControlsMenu");
-
-	}
-
+    private void Controls()
+    {
+        SceneManager.LoadScene("ControlsMenu");
+    }
 }
