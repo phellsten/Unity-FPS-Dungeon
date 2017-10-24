@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public class controlMenuMeta : MonoBehaviour {
+public class ControlsMenuMeta : MonoBehaviour {
 	public Button backButton;
     public Button shootButton;
     public Button aimButton;
@@ -124,7 +124,7 @@ public class controlMenuMeta : MonoBehaviour {
     }
 
     void Back() {
-		SceneManager.LoadScene ("UI");
+		SceneManager.LoadScene ("MainMenu");
 	}
 
 }

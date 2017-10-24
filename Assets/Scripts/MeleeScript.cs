@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class meleeScript : MonoBehaviour {
+public class MeleeScript : MonoBehaviour {
 
 	private Vector3 stabPos = new Vector3 (-0.15f, -0.25f, 0.5f);
 	private Vector3 hidePos = new Vector3 (-0.255f, -0.4383f, -0.251f);
@@ -31,8 +31,8 @@ public class meleeScript : MonoBehaviour {
 		// If press melee, currently not melee attacking and not aiming with weapon
 
 		// NOTE: if more weapons added this will need to be adapted ! //
-		if(Input.GetKeyDown(KeyBindings.MeleeKey) && melee == false && !weapon.GetComponent<shootingScript>().aiming && 
-				!weapon.GetComponent<shootingScript>().reloading && stabCooldown <= 0f) {
+		if(Input.GetKeyDown(KeyBindings.MeleeKey) && melee == false && !weapon.GetComponent<ShootingScript>().aiming && 
+				!weapon.GetComponent<ShootingScript>().reloading && stabCooldown <= 0f) {
 			melee = true;
 			GetComponents<AudioSource>()[0].Play();
 			stabCooldown = 0.5f;

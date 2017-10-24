@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class bossScript : MonoBehaviour {
+public class BossScript : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {

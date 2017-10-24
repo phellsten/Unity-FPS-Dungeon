@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using UnityEngine;
 
-public class UIScript : MonoBehaviour {
+public class MainMenuScript : MonoBehaviour {
 	public Button playButton;
 	public Button quitButton;
 	public Button controls;
@@ -26,7 +26,7 @@ public class UIScript : MonoBehaviour {
 	}
 
 	void Controls() {
-		SceneManager.LoadScene ("Controls");
+		SceneManager.LoadScene ("ControlsMenu");
 
 	}
 

@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class cameraMovement : MonoBehaviour {
+public class CameraMovement : MonoBehaviour {
 	public GameObject player;
 	public Camera cam;
 
@@ -42,11 +42,11 @@ public class cameraMovement : MonoBehaviour {
 		player.transform.localRotation = Quaternion.AngleAxis(mouseLook.x, player.transform.up);
 
 		// Holding shift to run faster
-		if(Input.GetKey(KeyBindings.CrouchKey) && player.GetComponent<charController>().grounded) {
+		if(Input.GetKey(KeyBindings.CrouchKey) && player.GetComponent<CharController>().grounded) {
 			this.transform.localPosition = Vector3.MoveTowards (this.transform.localPosition, new Vector3 (0f, crouchHeight, 0f), crouchSpeed * Time.deltaTime);
 
 		}
-		if(!Input.GetKey(KeyBindings.CrouchKey) && player.GetComponent<charController>().grounded) {
+		if(!Input.GetKey(KeyBindings.CrouchKey) && player.GetComponent<CharController>().grounded) {
 			this.transform.localPosition = Vector3.MoveTowards (this.transform.localPosition, new Vector3 (0f, normalHeight, 0f), crouchSpeed * Time.deltaTime);
 		}
     }

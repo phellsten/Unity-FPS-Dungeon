@@ -13,11 +13,9 @@ public class MonsterController : MonoBehaviour {
     private Transform playerTransform;
     private IEnumerator moveChecker;
     private bool inRange = false;
-    //private bool moving = false;
-    //private bool running = false;
     public float health = 5;
 
-	public shootingScript script;
+	public ShootingScript script;
 
     public static float moveCheckDelay = 0.1f;
     public static int attackDamage = 1;
@@ -41,7 +39,6 @@ public class MonsterController : MonoBehaviour {
 
     private void AddAttackAnimEvent()
     {
-        //Debug.Log("Create animEvent");
         AnimationEvent animEvent1 = new AnimationEvent();
         animEvent1.functionName = "Attack";
         animEvent1.stringParameter = "Attacking";
@@ -59,45 +56,28 @@ public class MonsterController : MonoBehaviour {
 
     void Update () {
         if (health <= 0) {
-			    Instantiate (explosion, this.transform.position, new Quaternion ());
-                this.GetComponent<scoreManager>().incrementScore();
+			Instantiate (explosion, this.transform.position, new Quaternion ());
+            this.GetComponent<ScoreManager>().incrementScore();
 
-				int range = Random.Range (2, 7);
-				GameObject.FindGameObjectWithTag ("Weapon").GetComponent<shootingScript>().ammoCap += range;
-				GameObject.FindGameObjectWithTag ("Weapon").GetComponent<shootingScript> ().refreshAmmo ();
+			int range = Random.Range (2, 7);
+			GameObject.FindGameObjectWithTag ("Weapon").GetComponent<ShootingScript>().ammoCap += range;
+			GameObject.FindGameObjectWithTag ("Weapon").GetComponent<ShootingScript> ().refreshAmmo ();
 			if (this.name == "Boss") {
-				this.GetComponent<bossScript> ().death ();
+				this.GetComponent<BossScript> ().death ();
 			}
-                Destroy (this.gameObject);
-		    }
-        //if (!moving && running)
-        //{
-        //    Debug.Log("Stop coroutine");
-        //    StopCoroutine(arriveChecker);
-        //    running = false;
-        //}
+            Destroy (this.gameObject);
+		}
 
-        // Set destination
-        //if (Input.GetKeyDown(KeyCode.Mouse0))
-        //{
-        //
-        //    float cameraY = Camera.main.transform.position.y;
-        //    Vector2 mouseScreenPos = Input.mousePosition;
-        //    Vector3 screenPosWithZDist = (Vector3)mouseScreenPos + (Vector3.forward * cameraY);
-        //    Vector3 fireToWorldPos = Camera.main.ScreenToWorldPoint(screenPosWithZDist);
-        //    Debug.Log("New Pos: " + fireToWorldPos);
-        //    nav.SetDestination(fireToWorldPos);
-        //    anim.SetBool("Walking",true);
-        //    moving = true;
-        //    arriveChecker = CheckForArrival();
-        //    StartCoroutine(arriveChecker);
-        //    running = true;
-        //}
         if (Input.GetKeyDown(KeyCode.Keypad1))
         {
             anim.SetTrigger("Attack");
         }
 
+    }
+
+    private void OnDestroy()
+    {
+        StopCoroutine(moveChecker);
     }
 
 
@@ -132,12 +112,11 @@ public class MonsterController : MonoBehaviour {
         }
     }
 
-    // Reassigns movement target to player location every 0.1 seconds.
+    // Reassigns movement target to player location every x seconds.
     IEnumerator CheckPlayerPosition()
     {     
         while (true)
         {
-            //Debug.Log("Run coroutine");
             nav.SetDestination(playerTransform.position);
             yield return new WaitForSeconds(moveCheckDelay);
         }

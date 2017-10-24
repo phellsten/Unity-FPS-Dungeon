@@ -31,7 +31,7 @@ public class meta : MonoBehaviour {
 			showMessage = false;
 		}
 		// Escape to open menu
-		if (Input.GetKeyDown ("escape")) {
+		if (Input.GetKeyDown (KeyCode.Escape)) {
 			if (Time.timeScale == 0.0f) {
 				// Resume Game
 				ResumeGame ();
@@ -55,7 +55,7 @@ public class meta : MonoBehaviour {
 
 	void QuitGame() {
 		Time.timeScale = 1.0f;
-		SceneManager.LoadScene ("UI");
+		SceneManager.LoadScene ("MainMenu");
 	}
 
 	void OnGUI() {

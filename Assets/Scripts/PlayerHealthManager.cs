@@ -26,7 +26,7 @@ public class PlayerHealthManager : MonoBehaviour {
 	public bool gameWon = false;
 
 	private AudioSource playerAudio, playerAudio2, playerAudio3;
-    private charController charControl;
+    private CharController charControl;
 
     public bool isDead;
     private bool damaged;
@@ -38,7 +38,7 @@ public class PlayerHealthManager : MonoBehaviour {
 		playerAudio2 = GetComponents<AudioSource>()[1];
 		playerAudio3 = GetComponents<AudioSource>()[2];
 
-        charControl = GetComponent<charController>();
+        charControl = GetComponent<CharController>();
         currentHealth = startingHealth;
 		GameObject.Find ("Dead").GetComponent<RawImage> ().enabled = false;
         updateHealthBar();

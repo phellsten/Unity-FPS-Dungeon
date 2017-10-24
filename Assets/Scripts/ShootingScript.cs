@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine.UI;
 using UnityEngine;
 
-public class shootingScript : MonoBehaviour {
+public class ShootingScript : MonoBehaviour {
 	public GameObject blood;
 	public GameObject muzzle;
 	public GameObject source;
@@ -178,7 +178,7 @@ public class shootingScript : MonoBehaviour {
             }
         }
 		// Holding right click, move gun to aim down sights.
-		if (Input.GetKey(KeyBindings.FocusAimKey) && !reloading && !meleeWeapon.GetComponent<meleeScript>().melee) {
+		if (Input.GetKey(KeyBindings.FocusAimKey) && !reloading && !meleeWeapon.GetComponent<MeleeScript>().melee) {
             aiming = true;
 			
 			cursor.GetComponentInChildren<Canvas> ().enabled = false;
