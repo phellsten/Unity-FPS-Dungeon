@@ -31,7 +31,7 @@ public class meleeScript : MonoBehaviour {
 		// If press melee, currently not melee attacking and not aiming with weapon
 
 		// NOTE: if more weapons added this will need to be adapted ! //
-		if(Input.GetKeyDown(KeyCode.V) && melee == false && !weapon.GetComponent<shootingScript>().aiming && 
+		if(Input.GetKeyDown(KeyBindings.MeleeKey) && melee == false && !weapon.GetComponent<shootingScript>().aiming && 
 				!weapon.GetComponent<shootingScript>().reloading && stabCooldown <= 0f) {
 			melee = true;
 			GetComponents<AudioSource>()[0].Play();

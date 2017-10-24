@@ -102,7 +102,7 @@ public class shootingScript : MonoBehaviour {
         }
 
         // Reloading
-        if (Input.GetKeyDown(KeyCode.R) && !reloading && ammoCount < magCount && ammoCap > 0)
+        if (Input.GetKeyDown(KeyBindings.ReloadKey) && !reloading && ammoCount < magCount && ammoCap > 0)
         {
             reloading = true;
             GetComponents<AudioSource>()[2].Play();
@@ -121,7 +121,7 @@ public class shootingScript : MonoBehaviour {
         }
 
         // Shooting
-        if (Input.GetMouseButtonDown(0) && ammoCount > 0 && !reloading)
+        if (Input.GetKeyDown(KeyBindings.ShootKey) && ammoCount > 0 && !reloading)
         {
             ammoCount -= 1;
             this.ammoDisplay.text = "Ammo: " + ammoCount + " / " + ammoCap;
@@ -159,7 +159,7 @@ public class shootingScript : MonoBehaviour {
                 }
             }
         }
-        else if (Input.GetMouseButtonDown(0) && ammoCount == 0 && !reloading)
+        else if (Input.GetKeyDown(KeyBindings.ShootKey) && ammoCount == 0 && !reloading)
         {
             GetComponents<AudioSource>()[1].Play();
         }
@@ -178,7 +178,7 @@ public class shootingScript : MonoBehaviour {
             }
         }
 		// Holding right click, move gun to aim down sights.
-		if (Input.GetMouseButton (1) && !reloading && !meleeWeapon.GetComponent<meleeScript>().melee) {
+		if (Input.GetKey(KeyBindings.FocusAimKey) && !reloading && !meleeWeapon.GetComponent<meleeScript>().melee) {
             aiming = true;
 			
 			cursor.GetComponentInChildren<Canvas> ().enabled = false;
@@ -189,7 +189,7 @@ public class shootingScript : MonoBehaviour {
         }
 
 		// Right click not pressed, keep gun in normal position.
-		if (!Input.GetMouseButton (1) && !reloading) {
+		if (!Input.GetKey(KeyBindings.FocusAimKey) && !reloading) {
             aiming = false;
 			cursor.GetComponentInChildren<Canvas> ().enabled = true;
 

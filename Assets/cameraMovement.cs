@@ -42,11 +42,11 @@ public class cameraMovement : MonoBehaviour {
 		player.transform.localRotation = Quaternion.AngleAxis(mouseLook.x, player.transform.up);
 
 		// Holding shift to run faster
-		if(Input.GetKey(KeyCode.LeftControl) && player.GetComponent<charController>().grounded) {
+		if(Input.GetKey(KeyBindings.CrouchKey) && player.GetComponent<charController>().grounded) {
 			this.transform.localPosition = Vector3.MoveTowards (this.transform.localPosition, new Vector3 (0f, crouchHeight, 0f), crouchSpeed * Time.deltaTime);
 
 		}
-		if(!Input.GetKey(KeyCode.LeftControl) && player.GetComponent<charController>().grounded) {
+		if(!Input.GetKey(KeyBindings.CrouchKey) && player.GetComponent<charController>().grounded) {
 			this.transform.localPosition = Vector3.MoveTowards (this.transform.localPosition, new Vector3 (0f, normalHeight, 0f), crouchSpeed * Time.deltaTime);
 		}
     }

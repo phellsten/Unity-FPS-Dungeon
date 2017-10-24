@@ -39,10 +39,10 @@ public class charController : MonoBehaviour {
         groundedCheck ();
 
 		// Can jump if we're on the ground and press space.
-		if (Input.GetKey (KeyCode.Space) && grounded) {
+		if (Input.GetKey (KeyBindings.JumpKey) && grounded) {
 			rb.velocity = new Vector3();
             audioSource.Stop();
-            if (Input.GetKey (KeyCode.LeftControl)) {
+            if (Input.GetKey (KeyBindings.CrouchKey)) {
 				// Crouch jumping
 				speed = baseSpeed;
 				rb.AddForce (transform.up * jumpSpeed * 1.15f, ForceMode.Impulse);
@@ -51,40 +51,41 @@ public class charController : MonoBehaviour {
 			}
 		}	
 		// Movement keys with WASD
-		if(Input.GetKey(KeyCode.D)) {
+		if(Input.GetKey(KeyBindings.RightKey)) {
 			transform.Translate(Vector3.Normalize(Vector3.right * Time.deltaTime) * speed);
             moving = true;
         }
-		if(Input.GetKey(KeyCode.A)) {
+		if(Input.GetKey(KeyBindings.LeftKey)) {
 			
 			transform.Translate(Vector3.Normalize(-1.0f * Vector3.right * Time.deltaTime) * speed);
             moving = true;
         }
-		if(Input.GetKey(KeyCode.W)) {
+		if(Input.GetKey(KeyBindings.ForwardKey)) {
 			transform.Translate(Vector3.Normalize(Vector3.forward * Time.deltaTime) * speed);
             moving = true;
         }
-		if(Input.GetKey(KeyCode.S)) {
+		if(Input.GetKey(KeyBindings.BackwardKey)) {
 			transform.Translate(Vector3.Normalize(-1.0f * Vector3.forward * Time.deltaTime) * speed);
             moving = true;
         }
 
-        if(!Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.W) && !Input.GetKey(KeyCode.S) && !Input.GetKey(KeyCode.D))
+        if(!Input.GetKey(KeyBindings.LeftKey) && !Input.GetKey(KeyBindings.ForwardKey)
+            && !Input.GetKey(KeyBindings.BackwardKey) && !Input.GetKey(KeyBindings.RightKey))
         {
             moving = false;
         }
 
-		if(!Input.GetKey(KeyCode.LeftControl) && grounded) {
+		if(!Input.GetKey(KeyBindings.CrouchKey) && grounded) {
 			speed = baseSpeed;
 		}
 		// Holding shift to run faster
-		if(Input.GetKey(KeyCode.LeftShift) && grounded) {
+		if(Input.GetKey(KeyBindings.SprintKey) && grounded) {
 			speed = 2 * baseSpeed;
 		}
-		if(!Input.GetKey(KeyCode.LeftShift) && grounded) {
+		if(!Input.GetKey(KeyBindings.SprintKey) && grounded) {
 			speed = baseSpeed;
 		}
-		if(Input.GetKey(KeyCode.LeftControl) && grounded) {
+		if(Input.GetKey(KeyBindings.CrouchKey) && grounded) {
 			speed = baseSpeed / 2;
 		}
 
@@ -92,7 +93,7 @@ public class charController : MonoBehaviour {
 
         if(moving)
         {
-            if (!Input.GetKey(KeyCode.LeftShift))
+            if (!Input.GetKey(KeyBindings.SprintKey))
             {
                 audioSource.clip = walkSound;
                 if (!audioSource.isPlaying)
@@ -101,7 +102,7 @@ public class charController : MonoBehaviour {
                 }
             }
 
-            if (Input.GetKey(KeyCode.LeftShift))
+            if (Input.GetKey(KeyBindings.SprintKey))
             {
                 audioSource.clip = sprintSound;
                 if (!audioSource.isPlaying)
