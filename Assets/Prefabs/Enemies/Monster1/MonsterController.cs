@@ -1,11 +1,9 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-
-public class MonsterController : MonoBehaviour {
-
+public class MonsterController : MonoBehaviour
+{
     private NavMeshAgent nav;
     private Animator anim;
     private AnimationClip clip;
@@ -15,18 +13,20 @@ public class MonsterController : MonoBehaviour {
     private bool inRange = false;
     public float health = 5;
 
-	public ShootingScript script;
+    public ShootingScript script;
 
     public static float moveCheckDelay = 0.1f;
     public static int attackDamage = 1;
 
     public GameObject explosion;
 
-	void Start() {
-		explosion = (GameObject)(Resources.Load ("explosion"));
-	}
+    private void Start()
+    {
+        explosion = (GameObject)(Resources.Load("explosion"));
+    }
 
-    void Awake () {
+    private void Awake()
+    {
         nav = GetComponent<NavMeshAgent>();
         anim = GetComponent<Animator>();
         AddAttackAnimEvent();
@@ -35,7 +35,7 @@ public class MonsterController : MonoBehaviour {
         moveChecker = CheckPlayerPosition();
         StartCoroutine(moveChecker);
         anim.SetBool("Walking", true);
-	}
+    }
 
     private void AddAttackAnimEvent()
     {
@@ -54,32 +54,33 @@ public class MonsterController : MonoBehaviour {
         clip.AddEvent(animEvent2);
     }
 
-    void Update () {
-        if (health <= 0) {
-			Instantiate (explosion, this.transform.position, new Quaternion ());
+    private void Update()
+    {
+        if (health <= 0)
+        {
+            Instantiate(explosion, this.transform.position, new Quaternion());
             this.GetComponent<ScoreManager>().incrementScore();
 
-			int range = Random.Range (2, 7);
-			GameObject.FindGameObjectWithTag ("Weapon").GetComponent<ShootingScript>().ammoCap += range;
-			GameObject.FindGameObjectWithTag ("Weapon").GetComponent<ShootingScript> ().refreshAmmo ();
-			if (this.name == "Boss") {
-				this.GetComponent<BossScript> ().death ();
-			}
-            Destroy (this.gameObject);
-		}
+            int range = Random.Range(2, 7);
+            GameObject.FindGameObjectWithTag("Weapon").GetComponent<ShootingScript>().ammoCap += range;
+            GameObject.FindGameObjectWithTag("Weapon").GetComponent<ShootingScript>().refreshAmmo();
+            if (this.name == "Boss")
+            {
+                this.GetComponent<BossScript>().death();
+            }
+            Destroy(this.gameObject);
+        }
 
         if (Input.GetKeyDown(KeyCode.Keypad1))
         {
             anim.SetTrigger("Attack");
         }
-
     }
 
     private void OnDestroy()
     {
         StopCoroutine(moveChecker);
     }
-
 
     public void Attack(string message)
     {
@@ -113,8 +114,8 @@ public class MonsterController : MonoBehaviour {
     }
 
     // Reassigns movement target to player location every x seconds.
-    IEnumerator CheckPlayerPosition()
-    {     
+    private IEnumerator CheckPlayerPosition()
+    {
         while (true)
         {
             nav.SetDestination(playerTransform.position);
